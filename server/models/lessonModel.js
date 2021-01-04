@@ -1,23 +1,19 @@
 const mongoose = require('mongoose')
 
 const lessonSchema = mongoose.Schema({
-    // user/name
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
     },
-    // date
     date: {
         type: Date,
         required: true
     },
-    // time
     time: {
         type: Date,
         required: true
     },
-    // length
     length: {
         type: Number,
         required: true,
@@ -28,35 +24,29 @@ const lessonSchema = mongoose.Schema({
             message: props => `${props.value} is not a valid lesson length`
         }
     },
-    // location
     location: {
         type: String,
         required: true
     },
-    // confirmed
     confirmed: {
         type: Boolean,
         required: true,
         default: false
     },
-    // price
     price: {
         type: Number,
         required: true,
     },
-    // isPaid
     isPaid: {
         type: Boolean,
         required: true,
         default: false
     },
-    // isCanceled
     isCanceled: {
         type: Boolean,
         required: true,
         default: false
     },
-    // isRescheduled
     isRescheduled: {
         type: Boolean,
         default: false,
@@ -70,9 +60,8 @@ const lessonSchema = mongoose.Schema({
             location: {
                 type: String
             },
-            required: function(isRescheduled) {
-                this.isRescheduled ? true : false
-            }
+            // if this works, it will only require these fields if isRescheduled is true.
+            required: isRescheduled => this.isRescheduled ? true : false
         },
     }
 })
