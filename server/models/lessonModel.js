@@ -61,7 +61,7 @@ const lessonSchema = mongoose.Schema({
                 type: String
             },
             // if this works, it will only require these fields if isRescheduled is true.
-            required: isRescheduled => this.isRescheduled ? true : false
+            required: () => this.isRescheduled ? true : false
         },
     }
 })
