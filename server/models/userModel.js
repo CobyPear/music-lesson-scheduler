@@ -22,7 +22,8 @@ const userSchema = mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+    lessons: [{type: mongoose.Schema.Types.ObjectId, ref: 'Lesson'}]
 },{
     timestamps: true
 })
