@@ -73,3 +73,9 @@ const getUserById = asyncHandler(async(req, res) => {
         throw new Error('User not found')
     }
 })
+
+module.exports = {
+    authUser,
+    registerUser,
+    getUserById
+}
