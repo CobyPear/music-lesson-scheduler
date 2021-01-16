@@ -4,13 +4,11 @@ const mongoose = require('mongoose')
 const User = require('../models/userModel')
 const Lesson = require('../models/lessonModel')
 const usersData = require('../data/users')
-const users = require('../data/users')
-const dotenv = require('dotenv').config()
 
 describe('User Model Test', () => {
     // connect to the MongoDB Memory Server which stores the information only in memory
     beforeAll(async() => {
-        await mongoose.connect(process.env.MONGO_URI, {
+        await mongoose.connect(global.__MONGO_URI__, {
             useNewUrlParser: true,
             useCreateIndex: true,
             useUnifiedTopology: true
@@ -71,7 +69,7 @@ describe('User Model Test', () => {
 describe('Lesson Model Test', () => {
     // connect to the MongoDB Memory Server which stores the information only in memory
     beforeAll(async() => {
-        await mongoose.connect(process.env.MONGO_URI, {
+        await mongoose.connect(global.__MONGO_URI__, {
             useNewUrlParser: true,
             useCreateIndex: true,
             useUnifiedTopology: true
