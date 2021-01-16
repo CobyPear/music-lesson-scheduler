@@ -1,6 +1,7 @@
 const server = require('../server')
 const request = require('supertest')
 const usersInfo = require('../data/users')
+const lessons = require('../data/lessons')
 const User = require('../models/userModel')
 const mongoose = require('mongoose')
 
@@ -25,7 +26,7 @@ describe('Test User Routes', () => {
 
     })
 
-    it('should get a user by user id', async (done) => {
+    it('should get a user by user id', async(done) => {
         await request(server)
             .get(`/api/users/${userId}`)
             .expect(200)
@@ -37,7 +38,7 @@ describe('Test User Routes', () => {
             .catch(err => done(err))
     })
 
-    it('should authorize and login a user', async (done) => {
+    it('should authorize and login a user', async(done) => {
         await request(server)
             .post(`/api/users/login`)
             .send({
@@ -54,11 +55,46 @@ describe('Test User Routes', () => {
             })
             .catch(err => done(err))
     })
+
+    afterAll(async(done) => {
+        await User.deleteOne({ email: usersInfo[2].email })
+        await mongoose.connection.close()
+        server.close()
+        done()
+    })
 })
 
-afterAll(async(done) => {
-    await User.deleteOne({ email: usersInfo[2].email})
-    await mongoose.connection.close()
-    server.close()
-    done()
+describe('Test Lesson Routes', () => {
+    beforeAll(async(done) => {
+        const testUser = User.create(usersInfo[2])
+        await testUser.save()
+
+        const testUserSaved = await userId.findOne({ email: usersInfo[2].email })
+        userId = testUserSaved._id
+        lessons[0].user = userId
+    })
+
+    it('should create a lesson associated with the user', async(done) => {
+        await request(server)
+            .post('/api/lesson/create')
+            .send(lessons[0])
+            .expect(201)
+            .then(resp => {
+                expect(User.lessons[0]._id).toBe(resp.body._id)
+                expect(resp.body._id).toBeDefined()
+                expect(resp.body.user).toBe(lessons[0].user)
+
+                expect(new Date(resp.body.date).toISOString())
+                    .toBe(new Date(lesson[0].date).toISOString())
+                expect(new Date(resp.body.time).toISOString())
+                    .toBe(new Date(lessons[0].time).toISOString())
+
+                expect(resp.body.location).toBe(lessons[0].location)
+                expect(resp.body.price).toBe(lessons[0].price)
+
+                done()
+            })
+            .catch(err => done(err))
+    })
+
 })
