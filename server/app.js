@@ -6,12 +6,14 @@ const connectDB = require('./config/db')
 const dotenv = require('dotenv')
 dotenv.config()
 
+// mongoose connection to db
 connectDB()
 
 const PORT = process.env.PORT || 8080
 const app = express()
 app.use(express.json())
 
+// Static routes depending on production or development environment
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/client/build')))
 
@@ -25,5 +27,10 @@ if (process.env.NODE_ENV === 'production') {
         return res.send('API is running... on port' + PORT)
     })
 }
+
+// ROUTES
+const userRoutes = require('./routes/userRoutes')
+
+app.use('/api/users', userRoutes)
 
 module.exports = { app, PORT }
