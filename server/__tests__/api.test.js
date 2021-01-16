@@ -2,11 +2,12 @@ const server = require('../server')
 const request = require('supertest')
 const usersInfo = require('../data/users')
 const User = require('../models/userModel')
+const mongoose = require('mongoose')
 
-jest.useFakeTimers()
-describe('GET /api/user', () => {
+
+describe('Test User Routes', () => {
     it('should register a new user and respond with that user\'s info as json', async(done) => {
-        request(server)
+        await request(server)
             .post('/api/users')
             .send(usersInfo[2])
             .expect(201)
@@ -21,7 +22,9 @@ describe('GET /api/user', () => {
     })
 })
 
-afterAll(async() => {
+afterAll(async(done) => {
     await User.deleteMany()
+    await mongoose.connection.close()
     server.close()
+    done()
 })
