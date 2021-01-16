@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(logger('dev'))
 
     app.get('/', (req, res) => {
-        return res.send('API is running... on port' + PORT)
+        return res.send('API is running... on port ' + PORT)
     })
 }
 
