@@ -26,4 +26,8 @@ if (process.env.NODE_ENV === 'production') {
     })
 }
 
+const userRoutes = require('./routes/userRoutes')
+
+app.use('/api/users', userRoutes)
+
 app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} on port ${PORT}`))

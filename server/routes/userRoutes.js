@@ -6,8 +6,8 @@ const {
     getUserById
 } = require('../controllers/userControllers')
 
-router.route('/users/login').post(authUser)
-router.route('/users/').post(registerUser)
-router.route('users/:id').get(getUserById)
+router.route('/').post(registerUser)
+router.route('/login').post(authUser)
+router.route('/:id').get(getUserById)
 
 module.exports = router
