@@ -6,6 +6,7 @@ const User = require('../models/userModel')
 const mongoose = require('mongoose')
 const Lesson = require('../models/lessonModel')
 const connectDB = require('../config/db')
+
 //TODO: complete user routes tests, then add lesson routes tests
 
 let userId
@@ -113,6 +114,9 @@ describe('Test Lesson Routes', () => {
             })
             .catch(err => done(err))
     })
+
+    // TODO: tests for get all lessons for a user, get all lessons, search/filter queries
+    it('should find all lessons associated with a user')
 
     afterAll(async(done) => {
         await User.deleteOne({ email: usersInfo[2].email })

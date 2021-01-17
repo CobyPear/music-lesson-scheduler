@@ -105,6 +105,25 @@ describe('Lesson Model Test', () => {
         const savedLesson = await lesson.save()
         // push the new lesson id into the user's lesson array
         await savedUser.lessons.push(savedLesson._id)
+
+        // populate the user with the lesson to see if it was correctly populated
+        savedUser.populate('lessons')
+            .execPopulate((err, user) => {
+                if (err) return err
+                
+                expect(lesson._id).toStrictEqual(user.lessons[0]._id)
+                expect(lesson.user).toStrictEqual(user.lessons[0].user)
+                expect(lesson.date).toStrictEqual(user.lessons[0].date)
+                expect(lesson.time).toBe(user.lessons[0].time)
+                expect(lesson.length).toBe(user.lessons[0].length)
+                expect(lesson.location).toBe(user.lessons[0].location)
+                expect(lesson.price).toBe(user.lessons[0].price)
+                expect(lesson.confirmed).toBe(user.lessons[0].confirmed)
+                expect(lesson.isPaid).toBe(user.lessons[0].isPaid)
+                expect(lesson.isCanceled).toBe(user.lessons[0].isCanceled)
+                expect(lesson.isRescheduled).toBe(user.lessons[0].isRescheduled)
+            })
+        // console.log(savedUser)
         
         expect(savedLesson._id).toBeDefined()
         expect(savedLesson.user).toBe(lessonDetails.user)
@@ -127,6 +146,7 @@ describe('Lesson Model Test', () => {
     afterAll(async() => {
         await User.deleteMany()
         await Lesson.deleteMany()
+        await mongoose.connection.close()
     })
 
 })
