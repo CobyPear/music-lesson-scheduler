@@ -14,7 +14,6 @@ let token
 let lessonId
 
 describe('Test User Routes', () => {
-
     it('should register a new user and respond with that user\'s info as json', async(done) => {
         await request(server)
             .post('/api/users')
@@ -81,11 +80,11 @@ describe('Test Lesson Routes', () => {
             lessonsInfo[0].user = userId
 
             const response = await request(server)
-            .post(`/api/users/login`)
-            .send({
-                email: usersInfo[2].email,
-                password: usersInfo[2].password
-            })
+                .post(`/api/users/login`)
+                .send({
+                    email: usersInfo[2].email,
+                    password: usersInfo[2].password
+                })
             token = await response.body.token
             done()
         } catch (error) {
@@ -96,27 +95,56 @@ describe('Test Lesson Routes', () => {
     it('should create a lesson associated with the user', async(done) => {
         await request(server)
             .post('/api/lessons/create')
-            .auth(token, {type: 'bearer'})
+            .auth(token, { type: 'bearer' })
             .send(lessonsInfo[0])
             .expect(200)
-            .then(async (resp) => {
+            .then(async(resp) => {
+                let createdLesson = resp.body
+                    // save lessonId to use in the next test and to delete it on teardown
+                lessonId = createdLesson._id
 
-                expect(resp.body._id).toBeDefined()
-                expect(resp.body.associatedUser.lessons[0]).toBe(resp.body._id)
-                expect(resp.body.user).toBe(lessonsInfo[0].user.toString())
-                expect(new Date(resp.body.date).toISOString())
+                expect(createdLesson._id).toBeDefined()
+                expect(createdLesson.associatedUser.lessons[0]).toBe(createdLesson._id)
+                expect(createdLesson.user).toBe(lessonsInfo[0].user.toString())
+                expect(new Date(createdLesson.date).toISOString())
                     .toBe(new Date(lessonsInfo[0].date).toISOString())
-                expect(resp.body.time).toBe(lessonsInfo[0].time)
-                expect(resp.body.location).toBe(lessonsInfo[0].location)
-                expect(resp.body.price).toBe(lessonsInfo[0].price)
-
+                expect(createdLesson.time).toBe(lessonsInfo[0].time)
+                expect(createdLesson.location).toBe(lessonsInfo[0].location)
+                expect(createdLesson.price).toBe(lessonsInfo[0].price)
                 done()
             })
             .catch(err => done(err))
     })
 
-    // TODO: tests for get all lessons for a user, get all lessons, search/filter queries
-    it('should find all lessons associated with a user')
+    //  o -------------------------------------------------------------------------------- o
+    // | TODO: tests for get all lessons for a user, get all lessons, search/filter queries |
+    //  o -------------------------------------------------------------------------------- o
+
+    // This is sort of a user route, but since it requires a lesson to be associated with the user before being tested, the test will fall under the Lesson Routes tests
+    it('should find all lessons associated with a user', async(done) => {
+        await request(server)
+            .get(`/api/lessons/${userId}`)
+            .auth(token, { type: 'bearer' })
+            .expect(200)
+            .then(async(resp) => {
+                let user = resp.body
+                let lesson = resp.body.lessons[0]
+
+                expect(JSON.stringify(userId)).toStrictEqual(JSON.stringify(lesson.user))
+                expect(JSON.stringify(user._id)).toStrictEqual(JSON.stringify(userId))
+                expect(lesson._id).toStrictEqual(lessonId)
+                expect(new Date(lesson.date).toLocaleDateString()).toStrictEqual(lessonsInfo[0].date)
+                expect(lesson.time).toBe(lessonsInfo[0].time)
+                expect(lesson.length).toBe(lessonsInfo[0].length)
+                expect(lesson.price).toBe(lessonsInfo[0].price)
+                expect(lesson.confirmed).toBe(false)
+                expect(lesson.isPaid).toBe(false)
+                expect(lesson.isCanceled).toBe(false)
+                expect(lesson.isRescheduled).toBe(false)
+                done()
+            })
+            .catch(err => done(err))
+    })
 
     afterAll(async(done) => {
         await User.deleteOne({ email: usersInfo[2].email })

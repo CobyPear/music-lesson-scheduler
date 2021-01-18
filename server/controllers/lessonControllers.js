@@ -7,7 +7,7 @@ const User = require('../models/userModel')
 // @route    POST /api/lesson/create
 
 //TODO lesson controllers
-const createLesson = asyncHandler(async (req, res) => {
+const createLesson = asyncHandler(async(req, res) => {
     const {
         date,
         time,
@@ -17,7 +17,6 @@ const createLesson = asyncHandler(async (req, res) => {
     } = req.body
 
     const user = req.body.user ? req.body.user : req.user
-    console.log(user)
 
     const lesson = await Lesson.create({
         user: user,
@@ -27,12 +26,13 @@ const createLesson = asyncHandler(async (req, res) => {
         location: location,
         price: price
     })
-    
+
     await lesson.save()
 
     if (lesson) {
         const associatedUser = await User.findOne({ _id: user })
         await associatedUser.lessons.push(lesson._id)
+        await associatedUser.save()
 
         res.status(res.statusCode).json({
             _id: lesson._id,
@@ -50,7 +50,28 @@ const createLesson = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc     Get Lessons associated by a user by ID
+// @route    GET /api/lessons/:userId
+// @access   Private
+const getLessonsByUserId = asyncHandler(async(req, res) => {
+
+    const findUser = await User.findById(req.params.userId).select('-password')
+
+    findUser.populate('lessons')
+    .execPopulate((err, userAndLessons) => {
+            if (err) return err
+
+            if (userAndLessons) {
+                res.status(res.statusCode).json(userAndLessons)
+            } else {
+                res.status(404)
+                throw new Error('User not found')
+            }
+    })
+})
+
 
 module.exports = {
-    createLesson
+    createLesson,
+    getLessonsByUserId
 }
