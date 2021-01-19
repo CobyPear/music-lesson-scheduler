@@ -148,7 +148,7 @@ describe('Test Lesson Routes', () => {
 
     afterAll(async(done) => {
         await User.deleteOne({ email: usersInfo[2].email })
-        await Lesson.deleteOne({ _id: lessonId })
+        await Lesson.deleteOne({ lessonId })
         await mongoose.connection.close()
         server.close()
         done()
