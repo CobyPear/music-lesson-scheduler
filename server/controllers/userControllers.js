@@ -11,13 +11,16 @@ const authUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email })
 
     if (user && (await user.matchPassword(password))) {
+
+        // send the token in a cookie
+        await generateToken(res, user._id, user._name)
+
         res.status(res.statusCode).json({
             _id: user._id,
             name: user.name,
             email: user.email,
             instrument: user.instrument,
-            isAdmin: user.isAdmin,
-            token: generateToken(user._id)
+            isAdmin: user.isAdmin
         })
     } else {
         res.status(401)
@@ -47,13 +50,16 @@ const registerUser = asyncHandler(async(req, res) => {
     })
 
     if (user) {
+
+        // send the token in a cookie
+        await generateToken(res, user._id, user._name)
+        
         res.status(201).json({
             _id: user._id,
             name: user.name,
             email: user.email,
             instrument: user.instrument,
             isAdmin: user.isAdmin,
-            token: generateToken(user._id)
         })
     } else {
         res.status(400)
