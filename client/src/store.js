@@ -1,19 +1,19 @@
-import { createStore, combineReducers, applyMiddleware } from "redux"
-import thunk from 'redux-thunk'
-import { composeWithDSevTools } from 'redux-devtools-extension'
+// import { createStore, combineReducers, applyMiddleware } from "redux"
+// import thunk from 'redux-thunk'
+// import { composeWithDSevTools } from 'redux-devtools-extension'
 
-const reducer = combineReducers({
+// const reducer = combineReducers({
 
-        // reducers go here
+//         // reducers go here
 
-})
+// })
 
-const initialState = {
-    // initial state goes here
-}
+// const initialState = {
+//     // initial state goes here
+// }
 
-const middleware = [thunk]
+// const middleware = [thunk]
 
-const store = createStore(reducer, initialState, composeWithDSevTools(applyMiddleware(... middleware)))
+// const store = createStore(reducer, initialState, composeWithDSevTools(applyMiddleware(... middleware)))
 
-export default store
+// export default store
