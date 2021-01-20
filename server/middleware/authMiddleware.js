@@ -2,8 +2,17 @@ const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
-const protect = asyncHandler(async (req, res, next) => {
-    const token = req.cookies.token || ''
+const protect = asyncHandler(async(req, res, next) => {
+    let token
+        // token = req.cookies.token || ''
+    token = req.cookies.token ?
+        req.cookies.token :
+        req.headers.authorization && req.headers.authorization.startsWith('Bearer') ?
+        req.headers.authorization.split(' ')[1] :
+        ''
+        // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        //     token = req.headers.authorization.split(' ')[1]
+        // }
 
     try {
         if (!token) {

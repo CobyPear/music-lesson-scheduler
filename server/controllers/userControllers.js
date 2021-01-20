@@ -5,7 +5,7 @@ const generateToken = require('../utils/generateToken')
 // @desc     Auth user & get token
 // @route    POST /api/users/login
 // @access   Public
-const authUser = asyncHandler(async (req, res) => {
+const authUser = asyncHandler(async(req, res) => {
     const { email, password } = req.body
 
     const user = await User.findOne({ email })
@@ -13,15 +13,22 @@ const authUser = asyncHandler(async (req, res) => {
     if (user && (await user.matchPassword(password))) {
 
         // send the token in a cookie
-        await generateToken(res, user._id, user._name)
+        const { token, expiration } = await generateToken(user._id, user._name)
 
-        res.status(res.statusCode).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            instrument: user.instrument,
-            isAdmin: user.isAdmin
+        res.cookie('token', token, {
+            expires: new Date(Date.now() + expiration),
+            secure: false, // set to true if using https
+            httpOnly: true
         })
+        res.status(res.statusCode)
+            .json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                instrument: user.instrument,
+                isAdmin: user.isAdmin,
+                token: token
+            })
     } else {
         res.status(401)
         throw new Error('Invalid email or password')
@@ -52,15 +59,22 @@ const registerUser = asyncHandler(async(req, res) => {
     if (user) {
 
         // send the token in a cookie
-        await generateToken(res, user._id, user._name)
-        
-        res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            instrument: user.instrument,
-            isAdmin: user.isAdmin,
+        const { token, expiration } = generateToken(res, user._id, user._name)
+
+        res.cookie('token', token, {
+            expires: new Date(Date.now() + expiration),
+            secure: false, // set to true if using https
+            httpOnly: true
         })
+        res.status(201)
+            .json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                instrument: user.instrument,
+                isAdmin: user.isAdmin,
+                token: token
+            })
     } else {
         res.status(400)
         throw new Error('Invalid email or password')
@@ -84,5 +98,5 @@ const getUserById = asyncHandler(async(req, res) => {
 module.exports = {
     authUser,
     registerUser,
-    getUserById
+    getUserById,
 }

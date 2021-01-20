@@ -16,6 +16,8 @@ const createLesson = asyncHandler(async(req, res) => {
         price
     } = req.body
 
+    console.log(req.cookies)
+
     const user = req.body.user ? req.body.user : req.user
 
     const lesson = await Lesson.create({

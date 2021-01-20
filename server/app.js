@@ -3,6 +3,7 @@ const path = require('path')
 const logger = require('morgan')
 const errorHandler = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const connectDB = require('./config/db')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -13,8 +14,15 @@ connectDB()
 const PORT = process.env.PORT || 8080
 const app = express()
 app.use(express.json())
-app.user(cookieParser())
-
+app.use(cookieParser())
+app.use(cors({
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:8080',
+        null
+    ],
+    credentials: true
+}))
 
 // ROUTES
 const userRoutes = require('./routes/userRoutes')
