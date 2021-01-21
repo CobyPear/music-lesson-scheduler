@@ -17,6 +17,7 @@ const createLesson = asyncHandler(async(req, res) => {
     } = req.body
 
     const user = req.body.user ? req.body.user : req.user
+    console.log(req.user)
 
     const lesson = await Lesson.create({
         user: user,
@@ -69,7 +70,6 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
             }
     })
 })
-
 
 module.exports = {
     createLesson,
