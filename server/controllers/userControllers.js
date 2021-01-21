@@ -58,7 +58,7 @@ const registerUser = asyncHandler(async(req, res) => {
 
     if (user) {
         // send the token in a cookie
-        const { token, expiration } = generateToken(res, user._id, user._name)
+        const { token, expiration } = generateToken(user._id, user._name)
 
         res.cookie('token', token, {
             expires: new Date(Date.now() + expiration),

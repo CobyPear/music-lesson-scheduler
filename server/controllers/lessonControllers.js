@@ -71,7 +71,6 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
     })
 })
 
-
 module.exports = {
     createLesson,
     getLessonsByUserId
