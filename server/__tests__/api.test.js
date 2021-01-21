@@ -147,6 +147,27 @@ describe('Test Lesson Routes', () => {
             .catch(err => done(err))
     })
 
+    it('should find the lesson by id and return it', async(done) => {
+        await request(server)
+            .get(`/api/lessons/findlesson/${lessonId}`)
+            .auth(token, { type: 'bearer' })
+            .expect(200)
+            .then(resp => {
+                const lesson = resp.body
+                expect(lesson._id).toBe(lessonId)
+                expect(JSON.stringify(lesson.user)).toBe(JSON.stringify(userId))
+                expect(lesson.time).toBe(lessonsInfo[0].time)
+                expect(lesson.length).toBe(lessonsInfo[0].length)
+                expect(lesson.price).toBe(lessonsInfo[0].price)
+                expect(lesson.confirmed).toBe(false)
+                expect(lesson.isPaid).toBe(false)
+                expect(lesson.isCanceled).toBe(false)
+                expect(lesson.isRescheduled).toBe(false)
+                done()
+            })
+            .catch(err => done(err))
+    })
+
     afterAll(async(done) => {
         await User.deleteOne({ email: usersInfo[2].email })
         await Lesson.deleteOne({ lessonId })

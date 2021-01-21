@@ -75,7 +75,7 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
 // @route    GET /api/lessons/findlesson/:lessonId
 // @access   Private
 const getLessonById = asyncHandler(async (req, res) => {
-    const findLesson = await User.findById(req.params.lessonId)
+    const findLesson = await Lesson.findById(req.params.lessonId)
 
     if (!findLesson) {
         res.status(404)
