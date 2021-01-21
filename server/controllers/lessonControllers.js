@@ -72,7 +72,7 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
 })
 
 // @desc     Get one lesson by id associated by a user by ID
-// @route    GET /api/lessons/:lessonId
+// @route    GET /api/lessons/findlesson/:lessonId
 // @access   Private
 const getLessonById = asyncHandler(async (req, res) => {
     const findLesson = await User.findById(req.params.lessonId)
