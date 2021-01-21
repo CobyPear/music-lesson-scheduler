@@ -10,8 +10,8 @@ const connectDB = require('../config/db')
 //TODO: complete user routes tests, then add lesson routes tests
 
 let userId
-let token
 let lessonId
+let token
 
 describe('Test User Routes', () => {
     it('should register a new user and respond with that user\'s info as json', async(done) => {
@@ -24,6 +24,7 @@ describe('Test User Routes', () => {
                 expect(resp.body.name).toBe(usersInfo[2].name)
                 expect(resp.body.email).toBe(usersInfo[2].email)
                 expect(resp.body.instrument).toBe(usersInfo[2].instrument)
+                expect(resp.headers['set-cookie']).toBeDefined()
                 done()
             })
             .catch(err => done(err))
@@ -51,10 +52,10 @@ describe('Test User Routes', () => {
             })
             .expect(200)
             .then(resp => {
-                expect(resp.body.token).toBeDefined()
                 expect(resp.body.name).toBe(usersInfo[2].name)
                 expect(resp.body.email).toBe(usersInfo[2].email)
                 expect(resp.body.instrument).toBe(usersInfo[2].instrument)
+                expect(resp.headers['set-cookie']).toBeDefined()
                 done()
             })
             .catch(err => done(err))
@@ -79,13 +80,17 @@ describe('Test Lesson Routes', () => {
             userId = testUserSaved._id
             lessonsInfo[0].user = userId
 
-            const response = await request(server)
-                .post(`/api/users/login`)
+            await request(server).post('/api/users/login')
                 .send({
                     email: usersInfo[2].email,
                     password: usersInfo[2].password
                 })
-            token = await response.body.token
+                .expect(200)
+                .then(resp => {
+                    token = resp.headers['set-cookie'][0].split('=')[1].replace('; Path', '')
+                    done()
+                })
+                .catch(err => done(err))
             done()
         } catch (error) {
             done(error)
@@ -116,10 +121,6 @@ describe('Test Lesson Routes', () => {
             .catch(err => done(err))
     })
 
-    //  o -------------------------------------------------------------------------------- o
-    // | TODO: tests for get all lessons for a user, get all lessons, search/filter queries |
-    //  o -------------------------------------------------------------------------------- o
-
     // This is sort of a user route, but since it requires a lesson to be associated with the user before being tested, the test will fall under the Lesson Routes tests
     it('should find all lessons associated with a user', async(done) => {
         await request(server)
@@ -134,6 +135,27 @@ describe('Test Lesson Routes', () => {
                 expect(JSON.stringify(user._id)).toStrictEqual(JSON.stringify(userId))
                 expect(lesson._id).toStrictEqual(lessonId)
                 expect(new Date(lesson.date).toLocaleDateString()).toStrictEqual(lessonsInfo[0].date)
+                expect(lesson.time).toBe(lessonsInfo[0].time)
+                expect(lesson.length).toBe(lessonsInfo[0].length)
+                expect(lesson.price).toBe(lessonsInfo[0].price)
+                expect(lesson.confirmed).toBe(false)
+                expect(lesson.isPaid).toBe(false)
+                expect(lesson.isCanceled).toBe(false)
+                expect(lesson.isRescheduled).toBe(false)
+                done()
+            })
+            .catch(err => done(err))
+    })
+
+    it('should find the lesson by id and return it', async(done) => {
+        await request(server)
+            .get(`/api/lessons/findlesson/${lessonId}`)
+            .auth(token, { type: 'bearer' })
+            .expect(200)
+            .then(resp => {
+                const lesson = resp.body
+                expect(lesson._id).toBe(lessonId)
+                expect(JSON.stringify(lesson.user)).toBe(JSON.stringify(userId))
                 expect(lesson.time).toBe(lessonsInfo[0].time)
                 expect(lesson.length).toBe(lessonsInfo[0].length)
                 expect(lesson.price).toBe(lessonsInfo[0].price)
