@@ -10,6 +10,17 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import logo from '../images/music-lessons-logo.png'
 
+
+/*
+
+ 0-------------------------------------------------------0
+ |                                                       |
+ | TODO: make navbar responsive, implement login/singup  |
+ |   buttons, fix button styling                         |
+ 0-------------------------------------------------------0
+
+*/
+
 // Functions are from material-ui docs components/tabs
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -61,10 +72,20 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         flexGrow: 1,
-        marginRight: '10px'
+        marginRight: '10px',
+        [theme.breakpoints.up('sm')]: {
+            display: 'block'
+        }
     },
-    button: {
-        color: '#ffffff'
+    login: {
+        color: '#ffffff',
+        backgroundColor: theme.palette.primary.dark,
+        marginLeft: '48px'
+    },
+    signUp: {
+        color: '#ffffff',
+        backgroundColor: theme.palette.primary.dark,
+        marginLeft: '20px'
     }
 }))
 
@@ -73,6 +94,17 @@ export default function NavTabs() {
     const [value, setValue] = useState(0)
 
     const handleChange = (event, newValue) => setValue(newValue)
+
+    const login = () => {
+        console.log('clicked')
+        window.location.href = '/login'
+    }
+
+    const signup = () => {
+        // put logic here to direct user to homepage if already logged in
+        // also, direct to different sign up form that asks for user's instrument
+        window.location.href = '/login'
+    }
 
     return (
         <div className={classes.root}>
@@ -93,9 +125,9 @@ export default function NavTabs() {
                         aria-label="nav tabs">
                         <LinkTab href='/mylessons' label="My Lessons" {...a11yProps(0)} />
                         <LinkTab href='/schedulelesson' label="Schedule a Lesson" {...a11yProps(1)} />
-                        <Button className={classes.button}>Login</Button>
-                        <Button className={classes.button}>Signup</Button>
                     </Tabs>
+                        <Button className={classes.login} onClick={login}>Login</Button>
+                        <Button className={classes.signUp} onClick={signup}>Signup</Button>
                 </Toolbar>
             </AppBar>
             <TabPanel value={value} index={0}>

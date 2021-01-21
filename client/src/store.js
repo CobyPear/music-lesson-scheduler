@@ -1,19 +1,20 @@
-// import { createStore, combineReducers, applyMiddleware } from "redux"
-// import thunk from 'redux-thunk'
-// import { composeWithDSevTools } from 'redux-devtools-extension'
+import { createStore, combineReducers, applyMiddleware } from "redux"
+import thunk from 'redux-thunk'
+import { composeWithDevTools } from 'redux-devtools-extension'
+import { userLoginReducer } from './reducers/userReducers'
 
-// const reducer = combineReducers({
+const reducer = combineReducers({
+    userLogin: userLoginReducer
+})
 
-//         // reducers go here
+const initialState = {
+    userLogin: {
+        userInfo: {}
+    }
+}
 
-// })
+const middleware = [thunk]
 
-// const initialState = {
-//     // initial state goes here
-// }
+const store = createStore(reducer, initialState, composeWithDevTools(applyMiddleware(... middleware)))
 
-// const middleware = [thunk]
-
-// const store = createStore(reducer, initialState, composeWithDSevTools(applyMiddleware(... middleware)))
-
-// export default store
+export default store
