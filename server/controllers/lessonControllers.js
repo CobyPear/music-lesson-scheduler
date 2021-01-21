@@ -71,7 +71,22 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
     })
 })
 
+// @desc     Get one lesson by id associated by a user by ID
+// @route    GET /api/lessons/:lessonId
+// @access   Private
+const getLessonById = asyncHandler(async (req, res) => {
+    const findLesson = await User.findById(req.params.lessonId)
+
+    if (!findLesson) {
+        res.status(404)
+        throw new Error('Lesson not found')
+    } else {
+        res.status(res.statusCode).json(findLesson)
+    }
+})
+
 module.exports = {
     createLesson,
-    getLessonsByUserId
+    getLessonsByUserId,
+    getLessonById
 }
