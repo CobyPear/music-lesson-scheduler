@@ -57,7 +57,6 @@ export const login = (email, password) => async(dispatch) => {
         })
 
         const userDetails = { email: email, password: password }
-        console.log(userDetails)
 
         const response = await fetch('/api/users/login', {
             method: 'POST',
@@ -67,10 +66,9 @@ export const login = (email, password) => async(dispatch) => {
             },
             body: JSON.stringify(userDetails)
         })
-
-        const { data } = await response.json()
+        const data = await response.json()
         console.log(data)
-
+        
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data
