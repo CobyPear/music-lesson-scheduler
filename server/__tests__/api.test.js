@@ -18,7 +18,7 @@ describe('Test User Routes', () => {
         await request(server)
             .post('/api/users')
             .send(usersInfo[2])
-            .expect(201)
+            .expect(200)
             .then(resp => {
                 userId = resp.body._id
                 expect(resp.body.name).toBe(usersInfo[2].name)

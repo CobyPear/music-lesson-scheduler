@@ -1,13 +1,15 @@
 const asyncHandler = require('express-async-handler')
 const Lesson = require('../models/lessonModel')
 const User = require('../models/userModel')
+const axios = require('axios')
 
 // @desc     Create a lesson
 // @access   Public
 // @route    POST /api/lesson/create
-
-//TODO lesson controllers
 const createLesson = asyncHandler(async(req, res) => {
+    const token = req.session.jwt
+    console.log(' createLesson - req.session.jwt', token)
+
     const {
         date,
         time,
@@ -17,37 +19,24 @@ const createLesson = asyncHandler(async(req, res) => {
     } = req.body
 
     const user = req.body.user ? req.body.user : req.user
+
     console.log(req.user)
-
-    const lesson = await Lesson.create({
-        user: user,
-        date: date,
-        time: time,
-        length: length,
-        location: location,
-        price: price
-    })
-
-    await lesson.save()
-
-    if (lesson) {
-        const associatedUser = await User.findOne({ _id: user })
-        await associatedUser.lessons.push(lesson._id)
-        await associatedUser.save()
-
-        res.status(res.statusCode).json({
-            _id: lesson._id,
-            user: lesson.user,
-            date: lesson.date,
-            time: lesson.time,
-            length: lesson.length,
-            location: lesson.location,
-            price: lesson.price,
-            associatedUser
+    try {
+        const response = await axios('http://localhost:8080/auth/lesson/create', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            data: { user, date, time, length, location, price }
         })
-    } else {
-        res.status(400).json({ error: error.message })
-        throw new Error('Lesson not created, bad request')
+
+        const { data } = await response
+        console.log('data form /auth/lesson/create', data)
+        res.status(res.statusCode).json(data)
+
+    } catch (error) {
+        res.status(res.statusCode)
+        throw new Error(error)
     }
 })
 

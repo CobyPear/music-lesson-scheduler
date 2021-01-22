@@ -3,13 +3,16 @@ const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
 const protect = asyncHandler(async(req, res, next) => {
+    console.log(req.session)
     let token
         // token = req.cookies.token || ''
     token = req.cookies.token ?
         req.cookies.token :
         req.headers.authorization && req.headers.authorization.startsWith('Bearer') ?
         req.headers.authorization.split(' ')[1] :
+        req.session.jwt ? req.session.jwt :
         ''
+        console.log('protect middleware token', token)
     try {
         if (!token) {
             return res.status(401).json('Unauthorized, please login')
@@ -20,8 +23,10 @@ const protect = asyncHandler(async(req, res, next) => {
             id: decrypt.id,
             name: decrypt.name
         }
+        req.session.jwt = token
         next()
     } catch (error) {
+        console.log(' catch in protect ')
         return res.status(500).json(error)
     }
 })
