@@ -31,6 +31,23 @@ describe('Test User Routes', () => {
 
     })
 
+    it('should login a user and send back user details and a jwt token', async (done) => {
+        await request(server)
+            .post('/auth/local')
+            .send(usersInfo[2].email, usersInfo[2].password)
+            .expect(200)
+            .then(resp => {
+                expect(JSON.stringify(response.body._id)).toBe(JSON.stringify(userId))
+                expect(resp.body.email).toBe(usersInfo[2].email)
+                expect(resp.body.name).toBe(usersInfo[2].name)
+                expect(resp.body.instrument).toBe(usersInfo[2].instrument)
+                expect(resp.body.name).toBe(usersInfo[2].name)
+                expect(resp.body.token).toBeDefined()
+                done()
+            })
+            .catch(err => done(err))
+    })
+
     it('should get a user by user id', async(done) => {
         await request(server)
             .get(`/api/users/${userId}`)
