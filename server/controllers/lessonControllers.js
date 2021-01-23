@@ -7,8 +7,7 @@ const axios = require('axios')
 // @access   Public
 // @route    POST /api/lesson/create
 const createLesson = asyncHandler(async(req, res) => {
-    const token = req.session.jwt
-    console.log(' createLesson - req.session.jwt', token)
+    const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
 
     const {
         date,
@@ -18,9 +17,8 @@ const createLesson = asyncHandler(async(req, res) => {
         price
     } = req.body
 
-    const user = req.body.user ? req.body.user : req.user
+    const user = req.user ? req.user.id : req.body.user
 
-    console.log(req.user)
     try {
         const response = await axios('http://localhost:8080/auth/lesson/create', {
             method: 'POST',
@@ -31,7 +29,6 @@ const createLesson = asyncHandler(async(req, res) => {
         })
 
         const { data } = await response
-        console.log('data form /auth/lesson/create', data)
         res.status(res.statusCode).json(data)
 
     } catch (error) {
@@ -44,33 +41,49 @@ const createLesson = asyncHandler(async(req, res) => {
 // @route    GET /api/lessons/:userId
 // @access   Private
 const getLessonsByUserId = asyncHandler(async(req, res) => {
+    const userId = req.params.userId
+    const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
 
-    const findUser = await User.findById(req.params.userId).select('-password')
-
-    findUser.populate('lessons')
-    .execPopulate((err, userAndLessons) => {
-            if (err) return err
-
-            if (userAndLessons) {
-                res.status(res.statusCode).json(userAndLessons)
-            } else {
-                res.status(404)
-                throw new Error('User not found')
+    try {
+        const response = await axios(`http://localhost:8080/auth/lesson/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-    })
+        })
+        const { data } = await response
+        console.log(data)
+        res.status(res.statusCode).json(data)
+    } catch (error) {
+        console.log(error)
+        res.status(res.statusCode)
+        throw new Error(error)
+    }
+
+
 })
 
 // @desc     Get one lesson by id associated by a user by ID
 // @route    GET /api/lessons/findlesson/:lessonId
 // @access   Private
-const getLessonById = asyncHandler(async (req, res) => {
-    const findLesson = await Lesson.findById(req.params.lessonId)
+const getLessonById = asyncHandler(async(req, res) => {
+    const lessonId = req.params.lessonId
+    const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
 
-    if (!findLesson) {
-        res.status(404)
-        throw new Error('Lesson not found')
-    } else {
-        res.status(res.statusCode).json(findLesson)
+    try {
+        const response = await axios(`http://localhost:8080/auth/findlesson/${lessonId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const { data } = await response
+        console.log(data)
+        res.status(res.statusCode).json(data)
+    } catch (error) {
+        console.log(error)
+        res.status(res.statusCode)
+        throw new Error(error)
     }
 })
 

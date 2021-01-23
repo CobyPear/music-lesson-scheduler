@@ -1,5 +1,4 @@
 const asyncHandler = require('express-async-handler')
-const User = require('../models/userModel')
 const axios = require('axios')
 
 // @desc     Send user details & set token in req.session.token
@@ -7,7 +6,6 @@ const axios = require('axios')
 // @access   Public
 const loginUser = asyncHandler(async(req, res) => {
     const { email, password } = req.body
-
     try {
         const response = await axios('http://localhost:8080/auth/local', {
             method: 'POST',
@@ -16,88 +14,82 @@ const loginUser = asyncHandler(async(req, res) => {
                 password
             }
         })
-    
-        const { data } = await response
-        console.log('data from /auth/local', data)
-        req.jwt = data.token
-        req.session.jwt = data.token
+        const { data: { userData, token } } = await response
+        req.session.jwt = token
+        req.jwt = token
 
-        res.status(res.statusCode).json({
+        res.status(200).json({
             userData: {
-                _id: data._id,
-                name: data.name,
-                instrument: data.instrument,
-                isAdmin: data.isAdmin
-            }
+                _id: userData._id,
+                name: userData.name,
+                email: userData.email,
+                instrument: userData.instrument,
+                isAdmin: userData.isAdmin
+            },
+            token: token
         })
-        
+
     } catch (error) {
         res.status(res.statusCode)
         throw new Error(error)
     }
 })
 
-
 // @desc     Register new user
-// @route    POST /api/users/
+// @route    POST /api/users
 // @access   Public
 const registerUser = asyncHandler(async(req, res) => {
     const { email, password, name, instrument, isAdmin } = req.body
 
-    const userExists = await User.findOne({ email })
-
-    if (userExists) {
-        res.status(400)
-        throw new Error('User already exists')
-    }
-
-    const user = await User.create({
-        name: name,
-        email: email,
-        password: password,
-        instrument: instrument,
-        isAdmin: isAdmin ? isAdmin : false
-    })
-
-    if (user) {
-         const response = await axios('http://localhost:8080/auth/local', {
+    try {
+        const response = await axios('http://localhost:8080/auth/register', {
             method: 'POST',
             data: {
-                email,
-                password
+                email: email,
+                password: password,
+                name: name,
+                instrument: instrument,
+                isAdmin: isAdmin ? isAdmin : false
             }
         })
-    
-        const { data } = await response
-        console.log(data)
+        const { data: { userData, token } } = await response
+        req.session.jwt = token
+        req.jwt = token
 
-        req.session.jwt = data.token
-        
-        res.status(res.statusCode).json({
+        res.status(200).json({
             userData: {
-                _id: data._id,
-                name: data.name,
-                instrument: data.instrument,
-                isAdmin: data.isAdmin
-            }
+                _id: userData._id,
+                name: userData.name,
+                email: userData.email,
+                instrument: userData.instrument,
+                isAdmin: userData.isAdmin
+            },
+            token: token
         })
-    } else {
-        res.status(400)
-        throw new Error('Invalid email or password')
-
+    } catch (error) {
+        res.status(res.statusCode)
+        throw new Error(error)
     }
 })
 
 // @desc     Get user by ID
 // @route    GET /api/users/:id
-// @access   Private/Admin
+// @access   Public
 const getUserById = asyncHandler(async(req, res) => {
-    const user = await (await User.findById(req.params.id).select('-password'))
-    if (user) {
-        res.json(user)
-    } else {
-        res.status(404)
-        throw new Error('User not found')
+    const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
+    try {
+        const response = await axios(`http://localhost:8080/auth/users/${req.params.id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        const { data } = await response
+        res.status(res.statusCode).json(data)
+    } catch (error) {
+        res.status(res.statusCode)
+        throw new Error(error)
     }
 })
 

@@ -4,6 +4,7 @@ const logger = require('morgan')
 const errorHandler = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
 const connectDB = require('./config/db')
 const dotenv = require('dotenv')
@@ -20,8 +21,11 @@ app.use(session({
     secret: 'lowpass[filter',
     resave: false,
     saveUninitialized: true,
+    store: new MemoryStore({
+        checkPeriod: 900_000_000
+    }),
     cookie: {
-        maxAge: 900_000,
+        maxAge: 900_000_000,
         httpOnly: true,
         secure: false
     }
