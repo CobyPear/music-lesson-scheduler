@@ -1,15 +1,16 @@
-const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 
 const protect = asyncHandler(async(req, res, next) => {
     let token
-        // token = req.cookies.token || ''
+
     token = req.cookies.token ?
         req.cookies.token :
         req.headers.authorization && req.headers.authorization.startsWith('Bearer') ?
         req.headers.authorization.split(' ')[1] :
+        req.session.jwt ? req.session.jwt :
         ''
+        
     try {
         if (!token) {
             return res.status(401).json('Unauthorized, please login')
@@ -20,6 +21,7 @@ const protect = asyncHandler(async(req, res, next) => {
             id: decrypt.id,
             name: decrypt.name
         }
+        req.session.jwt = token
         next()
     } catch (error) {
         return res.status(500).json(error)
