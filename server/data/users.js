@@ -21,5 +21,12 @@ module.exports = [
         password: '123456',
         instrument: 'Drums',
         isAdmin: false
+    },
+    {
+        name: 'Smokey M',
+        email:'smokey@example.com',
+        password: '123456',
+        instrument: 'guiro',
+        isAdmin: false
     }
 ]

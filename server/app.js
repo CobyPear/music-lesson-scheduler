@@ -3,6 +3,8 @@ const path = require('path')
 const logger = require('morgan')
 const errorHandler = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
 const cors = require('cors')
 const connectDB = require('./config/db')
 const dotenv = require('dotenv')
@@ -15,6 +17,19 @@ const PORT = process.env.PORT || 8080
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
+app.use(session({ 
+    secret: 'lowpass[filter',
+    resave: false,
+    saveUninitialized: true,
+    store: new MemoryStore({
+        checkPeriod: 900_000_000
+    }),
+    cookie: {
+        maxAge: 900_000_000,
+        httpOnly: true,
+        secure: false
+    }
+}))
 app.use(cors({
     origin: [
         'http://localhost:3000',
@@ -27,7 +42,9 @@ app.use(cors({
 // ROUTES
 const userRoutes = require('./routes/userRoutes')
 const lessonRoutes = require('./routes/lessonRoutes')
+const authRoutes = require('./routes/authRoutes')
 
+app.use('/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/lessons', lessonRoutes)
 
