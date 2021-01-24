@@ -59,18 +59,17 @@ export default function Login({ location, history}) {
 
   const userLogin = useSelector(state => state.userLogin)
   const { loading, error, userInfo } = userLogin
+
+  
   useEffect(() => {
 
-    if ((userInfo && userInfo.length > 0) || document.cookie) {
-      history.push('/home')
-    }
-  },[history, userInfo])
+  },[])
 
 
   const handleSubmit = (e) => {
       e.preventDefault()
       dispatch(login(email, password))
-      if (userInfo && userInfo.length > 0) {
+      if (userInfo !== null) {
         history.push('/home')
       }
   }

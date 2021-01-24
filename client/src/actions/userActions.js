@@ -30,7 +30,7 @@ export const register = (name, email, password, instrument) => async(dispatch) =
 
         const { data } = await resp.json()
         console.log(data)
-
+        sessionStorage.setItem('userInfo', JSON.stringify({...data}))
         dispatch({
             type: USER_REGISTER_SUCCESS,
             payload: data
@@ -40,8 +40,6 @@ export const register = (name, email, password, instrument) => async(dispatch) =
             type: USER_LOGIN_SUCCESS,
             payload: data
         })
-
-
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,

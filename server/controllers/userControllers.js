@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
+const generateToken = require('../utils/generateToken')
 
 // @desc     Send user details & set token in req.session.token
 // @route    POST /api/users/login
@@ -88,10 +89,11 @@ const getUserById = asyncHandler(async(req, res) => {
         const { data } = await response
         res.status(res.statusCode).json(data)
     } catch (error) {
-        res.status(res.statusCode)
-        throw new Error(error)
+        console.log(error.response.data)
+        return error.response.data ? res.status(res.statusCode).send(error.response.data) : new Error(error)
     }
 })
+
 
 module.exports = {
     loginUser,
