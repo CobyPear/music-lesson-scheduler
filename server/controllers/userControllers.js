@@ -26,13 +26,12 @@ const loginUser = asyncHandler(async(req, res) => {
                 email: userData.email,
                 instrument: userData.instrument,
                 isAdmin: userData.isAdmin
-            },
-            token: token
+            }
         })
 
     } catch (error) {
-        res.status(res.statusCode)
-        throw new Error(error)
+        res.status(401)
+        throw new Error('Unauthorized')
     }
 })
 
@@ -64,11 +63,9 @@ const registerUser = asyncHandler(async(req, res) => {
                 email: userData.email,
                 instrument: userData.instrument,
                 isAdmin: userData.isAdmin
-            },
-            token: token
+            }
         })
     } catch (error) {
-        res.status(res.statusCode)
         throw new Error(error)
     }
 })
@@ -89,8 +86,7 @@ const getUserById = asyncHandler(async(req, res) => {
         const { data } = await response
         res.status(res.statusCode).json(data)
     } catch (error) {
-        console.log(error.response.data)
-        return error.response.data ? res.status(res.statusCode).send(error.response.data) : new Error(error)
+        throw new Error(error)
     }
 })
 

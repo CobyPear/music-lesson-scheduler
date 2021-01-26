@@ -129,7 +129,7 @@ const authCreateLesson = asyncHandler(async(req, res) => {
             associatedUser
         })
     } else {
-        res.status(400).json({ error: error.message })
+        res.status(400)
         throw new Error('Lesson not created, bad request')
     }
 })
