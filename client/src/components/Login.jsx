@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react' 
+import React, { useState, useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
-import {login} from '../actions/userActions'
+import { login } from '../actions/userActions'
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -47,9 +47,14 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error: {
+    backgroundColor: theme.palette.error.light,
+    padding: '12px',
+    textAlign: 'center'
+  }
 }));
 
-export default function Login({ location, history}) {
+export default function Login({ location, history }) {
   const classes = useStyles();
 
   const [email, setEmail] = useState()
@@ -60,18 +65,20 @@ export default function Login({ location, history}) {
   const userLogin = useSelector(state => state.userLogin)
   const { loading, error, userInfo } = userLogin
 
-  
+  const userDetails = useSelector(state => state.userLogin)
+  const { detailsLoading, detailsError, details } = userDetails
+
+
   useEffect(() => {
+    if (userInfo !== null && userInfo?._id) {
+      history.push('/home')
+    }
+  }, [])
 
-  },[])
 
-
-  const handleSubmit = (e) => {
-      e.preventDefault()
-      dispatch(login(email, password))
-      if (userInfo !== null) {
-        history.push('/home')
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(login(email, password))
   }
 
   return (
@@ -95,7 +102,7 @@ export default function Login({ location, history}) {
             autoComplete="email"
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
-            />
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -107,8 +114,13 @@ export default function Login({ location, history}) {
             id="password"
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
-            
+
           />
+          {
+            error && <div className="row">
+              <h2 className={classes.error}>{error}, please check your email and password</h2>
+            </div>
+          }
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
