@@ -141,12 +141,11 @@ const authCreateLesson = asyncHandler(async(req, res) => {
 // @route    GET /auth/lesson/:userId/
 // @access   Private
 const authGetLessonsByUserId = asyncHandler(async(req, res) => {
-    const findUser = await User.findById(req.params.userId).select('-password')
-
-    findUser.populate('lessons')
+    const findUser = (await User.findById(req.params.userId).select('-password'))
+    .populate('users.lesson')
         .execPopulate((err, userAndLessons) => {
+            console.log('userAndLessons lessons : ', userAndLessons.lessons)
             if (err) return err
-
             if (userAndLessons) {
                 res.status(res.statusCode).json(userAndLessons)
             } else {
@@ -154,6 +153,18 @@ const authGetLessonsByUserId = asyncHandler(async(req, res) => {
                 throw new Error('User not found')
             }
         })
+
+    // findUser.populate('lessons')
+    //     .exec((err, userAndLessons) => {
+    //         console.log('userAnd Lessons, authGetLessonsbyUserId: ',userAndLessons)
+    //         if (err) return err
+    //         if (userAndLessons) {
+    //             res.status(res.statusCode).json(userAndLessons)
+    //         } else {
+    //             res.status(404)
+    //             throw new Error('User not found')
+    //         }
+    //     })
 })
 
 // @desc     Get one lesson by id associated by a user by ID

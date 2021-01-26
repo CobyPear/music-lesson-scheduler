@@ -77,9 +77,10 @@ export const login = (email, password) => async(dispatch) => {
                 type: USER_LOGIN_SUCCESS,
                 payload: data
             })
+            console.log(data)
             window.location.href = '/home'
             sessionStorage.setItem('userInfo', JSON.stringify(data.userData))
-            // sessionStorage.setItem('token', JSON.stringify(data.token))
+            sessionStorage.setItem('token', JSON.stringify(data.token))
         }
     } catch (error) {
         console.log(error)
@@ -93,7 +94,10 @@ export const login = (email, password) => async(dispatch) => {
 
 export const logout = () => (dispatch) => {
     sessionStorage.removeItem('userInfo')
+    sessionStorage.removeItem('token')
     dispatch({ type: USER_LOGOUT })
+
+    fetch('/api/users/logout')
 }
 
 export const getUserDetails = (id) => async(dispatch) => {

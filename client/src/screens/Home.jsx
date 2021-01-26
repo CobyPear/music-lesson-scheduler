@@ -4,6 +4,7 @@ import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
 
 import { useDispatch, useSelector } from 'react-redux'
+import { lessonsByUserId } from '../actions/lessonActions'
 
 const Home = ({ history }) => {
 
@@ -14,12 +15,19 @@ console.log(calValue)
     const userLogin = useSelector(state => state.userLogin)
     const { loading, error, userInfo } = userLogin
 
+    const  getLessonsByUserId = useSelector(state => state.getLessonsByUserId)
+    const { lessonsLoading, lessonsError, lessons } = getLessonsByUserId
+
+
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
             history.push('/login')
         }
         // get lessons associated with user so we can display them
-    }, [history]);
+        dispatch(lessonsByUserId(userInfo._id))
+
+
+    }, []);
 
     return (
         <>

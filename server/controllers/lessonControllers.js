@@ -52,7 +52,6 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
             }
         })
         const { data } = await response
-        console.log(data)
         res.status(res.statusCode).json(data)
     } catch (error) {
         console.log(error)
