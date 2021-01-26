@@ -15,16 +15,16 @@ const authUser = asyncHandler(async(req, res) => {
         const { token } = await generateToken(user._id, user.name)
 
         res.status(res.statusCode)
-        .json({
-            userData: {
-                _id: user._id,
-                email: user.email,
-                name: user.name,
-                instrument: user.instrument,
-                isAdmin: user.isAdmin
-            },
-            token: token
-        })
+            .json({
+                userData: {
+                    _id: user._id,
+                    email: user.email,
+                    name: user.name,
+                    instrument: user.instrument,
+                    isAdmin: user.isAdmin
+                },
+                token: token
+            })
     } else {
         res.status(401)
         throw new Error('Invalid email or password')
@@ -38,7 +38,7 @@ const authRegisterUser = asyncHandler(async(req, res) => {
     const { email, password, name, instrument, isAdmin } = req.body
     try {
         const userExists = await User.findOne({ email })
-    
+
         if (userExists) {
             res.status(400)
             throw new Error('User already exists')
@@ -52,22 +52,22 @@ const authRegisterUser = asyncHandler(async(req, res) => {
         })
         if (user) {
             const { token } = await generateToken(user._id, user.name)
-    
+
             res.status(201)
-            .json({
-                userData: {
-                    _id: user._id,
-                    email: user.email,
-                    name: user.name,
-                    instrument: user.instrument,
-                    isAdmin: user.isAdmin
-                },
-                token: token
-            })
+                .json({
+                    userData: {
+                        _id: user._id,
+                        email: user.email,
+                        name: user.name,
+                        instrument: user.instrument,
+                        isAdmin: user.isAdmin
+                    },
+                    token: token
+                })
         } else {
             res.status(400)
             throw new Error('Invalid email or password')
-    
+
         }
     } catch (error) {
         res.status(res.statusCode)
@@ -129,7 +129,7 @@ const authCreateLesson = asyncHandler(async(req, res) => {
             associatedUser
         })
     } else {
-        res.status(400).json({ error: error.message })
+        res.status(400)
         throw new Error('Lesson not created, bad request')
     }
 })
@@ -168,7 +168,5 @@ const authGetLessonById = asyncHandler(async(req, res) => {
         res.status(res.statusCode).json(findLesson)
     }
 })
-
-
 
 module.exports = { authUser, authRegisterUser, authCreateLesson, authGetUserById, authGetLessonsByUserId, authGetLessonById }

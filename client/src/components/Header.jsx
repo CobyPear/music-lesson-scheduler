@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../actions/userActions'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -89,11 +91,17 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function NavTabs() {
+export default function NavTabs({ history }) {
     const classes = useStyles()
     const [value, setValue] = useState(0)
 
+    const dispatch = useDispatch()
+
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
     const handleChange = (event, newValue) => setValue(newValue)
+
 
     const login = () => {
         console.log('clicked')
@@ -103,6 +111,10 @@ export default function NavTabs() {
     const signup = () => {
         // put logic here to direct user to homepage if already logged in
         // also, direct to different sign up form that asks for user's instrument
+        window.location.href = '/login'
+    }
+    const logoutHandler = () => {
+        dispatch(logout())
         window.location.href = '/login'
     }
 
@@ -126,8 +138,13 @@ export default function NavTabs() {
                         <LinkTab href='/mylessons' label="My Lessons" {...a11yProps(0)} />
                         <LinkTab href='/schedulelesson' label="Schedule a Lesson" {...a11yProps(1)} />
                     </Tabs>
-                        <Button className={classes.login} onClick={login}>Login</Button>
-                        <Button className={classes.signUp} onClick={signup}>Signup</Button>
+                    <Button className={classes.login} onClick={login}>Login</Button>
+                    {userInfo !== null ? (
+                        <Button className={classes.signUp} onClick={logoutHandler}>Logout</Button>
+                    ) : (
+                            <Button className={classes.signUp} onClick={signup}>Signup</Button>
+                        )}
+
                 </Toolbar>
             </AppBar>
             <TabPanel value={value} index={0}>

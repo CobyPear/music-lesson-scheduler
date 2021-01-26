@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
+const generateToken = require('../utils/generateToken')
 
 // @desc     Send user details & set token in req.session.token
 // @route    POST /api/users/login
@@ -25,13 +26,12 @@ const loginUser = asyncHandler(async(req, res) => {
                 email: userData.email,
                 instrument: userData.instrument,
                 isAdmin: userData.isAdmin
-            },
-            token: token
+            }
         })
 
     } catch (error) {
-        res.status(res.statusCode)
-        throw new Error(error)
+        res.status(401)
+        throw new Error('Unauthorized')
     }
 })
 
@@ -63,11 +63,9 @@ const registerUser = asyncHandler(async(req, res) => {
                 email: userData.email,
                 instrument: userData.instrument,
                 isAdmin: userData.isAdmin
-            },
-            token: token
+            }
         })
     } catch (error) {
-        res.status(res.statusCode)
         throw new Error(error)
     }
 })
@@ -88,10 +86,10 @@ const getUserById = asyncHandler(async(req, res) => {
         const { data } = await response
         res.status(res.statusCode).json(data)
     } catch (error) {
-        res.status(res.statusCode)
         throw new Error(error)
     }
 })
+
 
 module.exports = {
     loginUser,
