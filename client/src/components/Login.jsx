@@ -73,7 +73,7 @@ export default function Login({ location, history }) {
     if (userInfo !== null && userInfo?._id) {
       history.push('/home')
     }
-  }, [])
+  }, [history, userInfo])
 
 
   const handleSubmit = async (e) => {

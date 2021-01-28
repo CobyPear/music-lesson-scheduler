@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
-const generateToken = require('../utils/generateToken')
 
 // @desc     Send user details & set token in req.session.token
 // @route    POST /api/users/login

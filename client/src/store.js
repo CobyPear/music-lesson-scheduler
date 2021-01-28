@@ -2,21 +2,22 @@ import { createStore, combineReducers, applyMiddleware } from "redux"
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { userDetailsReducer, userLoginReducer } from './reducers/userReducers'
-import { lessonsByUserIdReducer } from './reducers/lessonReducers'
+import { lessonsByUserIdReducer, lessonByIdReducer } from './reducers/lessonReducers'
+
 
 const reducer = combineReducers({
     userLogin: userLoginReducer,
     userDetails: userDetailsReducer,
-    getLessonsByUserId: lessonsByUserIdReducer
+    getLessonsByUserId: lessonsByUserIdReducer,
+    getLessonById: lessonByIdReducer,
 })
 
 let userInfoFromStorage = sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : null
-console.log(userInfoFromStorage)
 
 const initialState = {
     userLogin: {
         userInfo: userInfoFromStorage
-    }
+    },
 }
 
 

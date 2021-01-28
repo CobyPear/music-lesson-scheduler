@@ -141,36 +141,25 @@ const authCreateLesson = asyncHandler(async(req, res) => {
 // @route    GET /auth/lesson/:userId/
 // @access   Private
 const authGetLessonsByUserId = asyncHandler(async(req, res) => {
-    const findUser = (await User.findById(req.params.userId).select('-password'))
-    .populate('users.lesson')
+    (await User.findById(req.params.userId).select('-password'))
+    .populate({ path: 'lessons' })
         .execPopulate((err, userAndLessons) => {
-            console.log('userAndLessons lessons : ', userAndLessons.lessons)
             if (err) return err
             if (userAndLessons) {
-                res.status(res.statusCode).json(userAndLessons)
+                const { lessons } = userAndLessons
+                res.status(res.statusCode).json(lessons)
             } else {
                 res.status(404)
                 throw new Error('User not found')
             }
         })
-
-    // findUser.populate('lessons')
-    //     .exec((err, userAndLessons) => {
-    //         console.log('userAnd Lessons, authGetLessonsbyUserId: ',userAndLessons)
-    //         if (err) return err
-    //         if (userAndLessons) {
-    //             res.status(res.statusCode).json(userAndLessons)
-    //         } else {
-    //             res.status(404)
-    //             throw new Error('User not found')
-    //         }
-    //     })
 })
 
 // @desc     Get one lesson by id associated by a user by ID
 // @route    GET /auth/findlesson/:lessonId
 // @access   Private
 const authGetLessonById = asyncHandler(async(req, res) => {
+    console.log('req.params.lessonId', req.params.lessonId)
     const findLesson = await Lesson.findById(req.params.lessonId)
     if (!findLesson) {
         res.status(404)
