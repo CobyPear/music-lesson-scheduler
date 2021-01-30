@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import Calender from 'react-calendar'
+import React, { useState, useEffect, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useDispatch, useSelector } from 'react-redux'
-import { lessonsByUserId, lessonById, flatLessons } from '../actions/lessonActions'
+import { lessonsByUserId } from '../actions/lessonActions'
 import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
 
@@ -23,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = ({ history }) => {
     const classes = useStyles()
-    const [calValue, setCalValue] = useState(new Date())
-    const [lessonIndex, setLessonIndex] = useState(0)
-    let filteredLessons = []
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
@@ -41,29 +36,24 @@ const Home = ({ history }) => {
         if (userInfo === null || userInfo === undefined) {
             history.push('/login')
         }
-        dispatch(lessonsByUserId(userInfo._id))
-        console.log(lessons)
-        console.log(flatLessons)
-    }, [userInfo, history, dispatch])
+        const getLessons = () => {
+            dispatch(lessonsByUserId(userInfo._id))
+        }
+        if (userInfo) {
+            getLessons()
+        }
+    }, [dispatch, history, userInfo])
 
 
 
 
     function handleClick(e) {
-        console.log(e.target.dataset.key)
-        setLessonIndex(parseInt(e.target.dataset.lessonindex))
-        console.log(lessonIndex)
+
     }
     return (
         <div className={classes.root}>
             <div className='row'>
                 <h1>Welcome {userInfo && userInfo.name}</h1>
-            </div>
-            <div className='row'>
-                <Calender
-                    onChange={setCalValue}
-                    value={calValue}
-                />
             </div>
             <div className="row">
                 {lessonsLoading ? (<CircularProgress />) : lessonsError ? (<p>lessonsError</p>) : (
@@ -78,7 +68,7 @@ const Home = ({ history }) => {
                                 <th>Paid</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody onClick={handleClick}>
                             {flatLessons && flatLessons.map((x, i) => (
                                 <tr key={i}>
                                     <td>{x.date}</td>
