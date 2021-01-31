@@ -29,7 +29,7 @@ export const lessonsByUserId = (id) => async(dispatch) => {
             type: LESSON_BY_USER_ID_SUCCESS,
             payload: data
         })
-        
+
         dispatch({ type: FLAT_LESSON_TRY })
         let flatLessons = []
         data.forEach(x => flatLessons.push({
@@ -87,18 +87,19 @@ export const createLesson = (lessonData) => async(dispatch) => {
 
     try {
         dispatch({ type: LESSONS_CREATE_REQUEST })
-
         const response = await fetch(`api/lessons/create`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(lessonData)
         })
 
+        console.log()
         const { data } = await response.json()
-        console.log(data)
-        
+
         dispatch({
             type: LESSONS_CREATE_SUCCESS,
             payload: data

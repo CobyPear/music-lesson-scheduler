@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { createLesson  as lessonCreate } from '../actions/lessonActions'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
@@ -78,6 +79,9 @@ export const ScheduleLesson = ({ history }) => {
     const userLogin = useSelector(state => state.userLogin)
     const { loading, error, userInfo } = userLogin
 
+    const createLesson = useSelector(state => state.createLesson)
+    const { createLessonLoading, createLessonError, success } = createLesson
+
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
             history.push('/login')
@@ -100,12 +104,16 @@ export const ScheduleLesson = ({ history }) => {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        console.log(selectedDate.toLocaleDateString())
-        console.log(selectedDate.toLocaleTimeString())
-        console.log(lessonLength)
-        console.log(userInfo._id)
-        console.log(lessonLocation)
-        console.log(lessonPrice)
+        let data = {
+            user: userInfo._id,
+            date: selectedDate.toLocaleDateString(),
+            time: selectedDate.toLocaleTimeString(),
+            length: lessonLength,
+            location: lessonLocation,
+            price: lessonPrice
+        }
+        dispatch(lessonCreate(data))
+
     }
     return (
         <div className={classes.root}>
@@ -149,6 +157,9 @@ export const ScheduleLesson = ({ history }) => {
                     </Grid>
                     <Grid item xs={12}>
                         <Button className={classes.center} type='submit'>Submit</Button>
+                    </Grid>
+                    <Grid>
+                        {success && <p>Success! Lesson Scheduled</p>}
                     </Grid>
                 </Grid>
             </form>
