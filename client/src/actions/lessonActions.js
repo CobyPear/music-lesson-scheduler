@@ -58,7 +58,7 @@ export const lessonsByUserId = (id) => async(dispatch) => {
 }
 
 export const lessonById = (id) => async(dispatch) => {
-    let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
+    // let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
     try {
         dispatch({ type: LESSONS_FIND_BY_LESSON_ID_REQUEST })
 
@@ -77,6 +77,19 @@ export const lessonById = (id) => async(dispatch) => {
     } catch (error) {
         dispatch({
             type: LESSONS_FIND_BY_LESSON_ID_FAIL,
+            payload: error ? error : null
+        })
+    }
+}
+
+export const createLesson = (data) => async(dispatch) => {
+    let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
+
+    try {
+        
+    } catch (error) {
+        dispatch({
+            type: LESSONS_CREATE_FAIL,
             payload: error ? error : null
         })
     }
