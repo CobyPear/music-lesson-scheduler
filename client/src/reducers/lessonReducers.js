@@ -57,3 +57,16 @@ export const flatLessonsReducer = (state = { flatLessons: [] }, action) => {
             return state
     }
 }
+
+export const createLessonReducer = (state = {}, action) => {
+    switch (action.type) {
+        case LESSONS_CREATE_REQUEST:
+            return { loading: true }
+        case LESSONS_CREATE_SUCCESS:
+            return { loading: false, success: true, createdLesson: action.payload }
+        case LESSONS_CREATE_FAIL:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
+}
