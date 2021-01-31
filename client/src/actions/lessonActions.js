@@ -82,11 +82,27 @@ export const lessonById = (id) => async(dispatch) => {
     }
 }
 
-export const createLesson = (data) => async(dispatch) => {
+export const createLesson = (lessonData) => async(dispatch) => {
     let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
 
     try {
+        dispatch({ type: LESSONS_CREATE_REQUEST })
+
+        const response = await fetch(`api/lessons/create`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(lessonData)
+        })
+
+        const { data } = await response.json()
+        console.log(data)
         
+        dispatch({
+            type: LESSONS_CREATE_SUCCESS,
+            payload: data
+        })
     } catch (error) {
         dispatch({
             type: LESSONS_CREATE_FAIL,
