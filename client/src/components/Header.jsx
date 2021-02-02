@@ -11,17 +11,8 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import logo from '../images/music-lessons-logo.png'
+import Link from '@material-ui/core/Link'
 
-
-/*
-
- 0-------------------------------------------------------0
- |                                                       |
- | TODO: make navbar responsive, implement login/singup  |
- |   buttons, fix button styling                         |
- 0-------------------------------------------------------0
-
-*/
 
 // Functions are from material-ui docs components/tabs
 function TabPanel(props) {
@@ -60,8 +51,13 @@ function a11yProps(index) {
 function LinkTab(props) {
     return (
         <Tab
-            component="a"
-            onClick={e => e.preventDefault()}
+            component={Link}
+            to={props.to}
+            label={props.label}
+            onClick={e => {
+                e.preventDefault()
+                window.location.href = props.href
+            }}
             {...props}
         />
     )
@@ -79,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
             display: 'block'
         }
     },
+    tab: {
+        color: 'white'
+    },
     login: {
         color: '#ffffff',
         backgroundColor: theme.palette.primary.dark,
@@ -91,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function NavTabs({ history }) {
+export default function NavTabs() {
     const classes = useStyles()
     const [value, setValue] = useState(0)
 
@@ -103,15 +102,14 @@ export default function NavTabs({ history }) {
     const handleChange = (event, newValue) => setValue(newValue)
 
 
-    const login = () => {
-        console.log('clicked')
+    const login = () => {   
         window.location.href = '/login'
     }
 
     const signup = () => {
         // put logic here to direct user to homepage if already logged in
         // also, direct to different sign up form that asks for user's instrument
-        window.location.href = '/login'
+        window.location.href = '/signup'
     }
     const logoutHandler = () => {
         dispatch(logout())
@@ -135,8 +133,8 @@ export default function NavTabs({ history }) {
                         value={value}
                         onChange={handleChange}
                         aria-label="nav tabs">
-                        <LinkTab href='/mylessons' label="My Lessons" {...a11yProps(0)} />
-                        <LinkTab href='/schedulelesson' label="Schedule a Lesson" {...a11yProps(1)} />
+                        <LinkTab className={classes.tab} href='/home' label="My Lessons" {...a11yProps(0)} />
+                        <LinkTab className={classes.tab} href='/schedulelesson' label="Schedule a Lesson" {...a11yProps(1)} />
                     </Tabs>
                     <Button className={classes.login} onClick={login}>Login</Button>
                     {userInfo !== null ? (
@@ -155,6 +153,3 @@ export default function NavTabs({ history }) {
         </div>
     )
 }
-
-
-

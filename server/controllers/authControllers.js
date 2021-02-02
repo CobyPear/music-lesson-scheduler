@@ -141,14 +141,13 @@ const authCreateLesson = asyncHandler(async(req, res) => {
 // @route    GET /auth/lesson/:userId/
 // @access   Private
 const authGetLessonsByUserId = asyncHandler(async(req, res) => {
-    const findUser = await User.findById(req.params.userId).select('-password')
-
-    findUser.populate('lessons')
+    (await User.findById(req.params.userId).select('-password'))
+    .populate({ path: 'lessons' })
         .execPopulate((err, userAndLessons) => {
             if (err) return err
-
             if (userAndLessons) {
-                res.status(res.statusCode).json(userAndLessons)
+                const { lessons } = userAndLessons
+                res.status(res.statusCode).json(lessons)
             } else {
                 res.status(404)
                 throw new Error('User not found')
@@ -160,6 +159,7 @@ const authGetLessonsByUserId = asyncHandler(async(req, res) => {
 // @route    GET /auth/findlesson/:lessonId
 // @access   Private
 const authGetLessonById = asyncHandler(async(req, res) => {
+    console.log('req.params.lessonId', req.params.lessonId)
     const findLesson = await Lesson.findById(req.params.lessonId)
     if (!findLesson) {
         res.status(404)

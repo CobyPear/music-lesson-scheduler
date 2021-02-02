@@ -52,7 +52,6 @@ const getLessonsByUserId = asyncHandler(async(req, res) => {
             }
         })
         const { data } = await response
-        console.log(data)
         res.status(res.statusCode).json(data)
     } catch (error) {
         console.log(error)
@@ -81,9 +80,8 @@ const getLessonById = asyncHandler(async(req, res) => {
         console.log(data)
         res.status(res.statusCode).json(data)
     } catch (error) {
-        console.log(error)
-        res.status(res.statusCode)
-        throw new Error(error)
+        res.status(404)
+        throw new Error('Lesson not found')
     }
 })
 

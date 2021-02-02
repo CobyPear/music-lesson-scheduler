@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler')
 const axios = require('axios')
-const generateToken = require('../utils/generateToken')
 
 // @desc     Send user details & set token in req.session.token
 // @route    POST /api/users/login
@@ -26,7 +25,8 @@ const loginUser = asyncHandler(async(req, res) => {
                 email: userData.email,
                 instrument: userData.instrument,
                 isAdmin: userData.isAdmin
-            }
+            },
+            token: token
         })
 
     } catch (error) {
@@ -54,7 +54,6 @@ const registerUser = asyncHandler(async(req, res) => {
         })
         const { data: { userData, token } } = await response
         req.session.jwt = token
-        req.jwt = token
 
         res.status(200).json({
             userData: {
@@ -63,7 +62,8 @@ const registerUser = asyncHandler(async(req, res) => {
                 email: userData.email,
                 instrument: userData.instrument,
                 isAdmin: userData.isAdmin
-            }
+            },
+            token: token
         })
     } catch (error) {
         throw new Error(error)
@@ -82,7 +82,6 @@ const getUserById = asyncHandler(async(req, res) => {
                 'Authorization': `Bearer ${token}`
             }
         })
-
         const { data } = await response
         res.status(res.statusCode).json(data)
     } catch (error) {
@@ -90,9 +89,17 @@ const getUserById = asyncHandler(async(req, res) => {
     }
 })
 
-
+// @desc     Logout
+// @route    GET /api/users/logout
+// @access   Public
+const logout = asyncHandler(async (req,res) => {
+    req.session.destroy()
+    req.session.jwt = ''
+    res.status(204).json({message: 'Logged out successfully' })
+})
 module.exports = {
     loginUser,
     registerUser,
     getUserById,
+    logout
 }
