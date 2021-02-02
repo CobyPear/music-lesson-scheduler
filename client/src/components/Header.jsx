@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function NavTabs({ history }) {
+export default function NavTabs() {
     const classes = useStyles()
     const [value, setValue] = useState(0)
 
@@ -102,8 +102,7 @@ export default function NavTabs({ history }) {
     const handleChange = (event, newValue) => setValue(newValue)
 
 
-    const login = () => {
-        console.log('clicked')
+    const login = () => {   
         window.location.href = '/login'
     }
 
@@ -154,6 +153,3 @@ export default function NavTabs({ history }) {
         </div>
     )
 }
-
-
-

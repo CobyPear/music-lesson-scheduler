@@ -124,7 +124,7 @@ export const ScheduleLesson = ({ history }) => {
                         handleDateChange={handleDateChange}
                         classes={classes}
                     />
-                    <Grid direction='row' item xs={1}>
+                    <Grid item xs={1}>
                         <FormControl>
                             <InputLabel
                                 id='lesson-length-select-label'>
@@ -159,6 +159,7 @@ export const ScheduleLesson = ({ history }) => {
                         <Button className={classes.center} type='submit'>Submit</Button>
                     </Grid>
                     <Grid>
+                        {createLessonLoading && <CircularProgress />}
                         {success && <p>Success! Lesson Scheduled</p>}
                     </Grid>
                 </Grid>
