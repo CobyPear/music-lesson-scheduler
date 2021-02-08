@@ -5,7 +5,7 @@ import DoneIcon from '@material-ui/icons/Done'
 import ClearIcon from '@material-ui/icons/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { lessonsByUserId } from '../actions/lessonActions'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core'
 import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
 
@@ -17,8 +17,14 @@ const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650
     },
+    xIcon: {
+        color: theme.palette.error.light
+    },
+    checkIcon: {
+        color: theme.palette.success.light
+    },
     button: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.success.light,
         color: 'white',
         marginTop: '5px',
         padding: '10px'
@@ -56,13 +62,13 @@ const Home = ({ history }) => {
         return { date, time, length, location, price, paid }
     }
 
-    // TODO: create the rows
     const rows = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid)) : []
 
-
-
     function handleClick(e) {
-
+        // Payment button logic goes here!
+        // Button will show user a modal of their lesson
+        // then it will have another payment button
+        // user can then click that button and it will take them to payment portal
     }
     return (
         <div className={classes.root}>
@@ -106,7 +112,15 @@ const Home = ({ history }) => {
                                     {row.price}
                                 </TableCell>
                                 <TableCell component='th' scope='row'>
-                                    {!row.paid ? <ClearIcon/> : <DoneIcon/> }
+                                    {!row.paid ? <ClearIcon className={classes.xIcon} /> : <DoneIcon className={classes.checkIcon} />}
+                                </TableCell>
+                                <TableCell component='th' scope='row'>
+                                    {!row.paid && (
+                                        <Button
+                                            className={classes.button}>
+                                            {'Pay'}
+                                        </Button>
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}
