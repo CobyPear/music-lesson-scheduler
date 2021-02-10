@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.error.light
     },
     checkIcon: {
-        color: theme.palette.success.light
+        color: theme.palette.success.main
     },
     button: {
         backgroundColor: theme.palette.success.light,
@@ -44,7 +44,6 @@ const Home = ({ history }) => {
 
     const getLessonById = useSelector(state => state.getLessonById)
     const { lessonLoading, lessonError, lesson } = getLessonById
-    console.log(flatLessons)
 
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
@@ -96,7 +95,7 @@ const Home = ({ history }) => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
-                            <TableRow key={index} style={new Date(row.date) > Date.now() ? {backgroundColor: '#a6d4fa',  } : { backgroundColor: '#648dae', color: '#ffffff' }}>
+                            <TableRow key={index} style={new Date(row.date) > Date.now() ? {backgroundColor: '#a6d4fa',  } : { backgroundColor: '#648dae' }}>
                                 <TableCell component='th' scope='
                                     row'>
                                     {row.date}
