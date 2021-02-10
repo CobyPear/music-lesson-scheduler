@@ -38,7 +38,7 @@ export const lessonsByUserId = (id) => async(dispatch) => {
             length: x['length'],
             location: x.location,
             price: x.price,
-            'Paid': x.isPaid
+            paid: x.isPaid
         }))
         dispatch({
             type: FLAT_LESSON_ADD,
