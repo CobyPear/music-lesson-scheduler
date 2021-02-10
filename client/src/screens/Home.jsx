@@ -62,7 +62,14 @@ const Home = ({ history }) => {
         return { date, time, length, location, price, paid }
     }
 
-    const rows = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid)) : []
+    // maps lessons to our createData function
+    const temp = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid)) : []
+    // sorts lessons by date
+    const rows = temp.sort((a,b) => {
+        let dateA = new Date(a.date)
+        let dateB = new Date(b.date)
+        return dateB - dateA
+    })
 
     function handleClick(e) {
         // Payment button logic goes here!
@@ -75,7 +82,6 @@ const Home = ({ history }) => {
             <div className='row'>
                 <h1>Welcome {userInfo && userInfo.name}</h1>
             </div>
-
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label='lessons-table'>
                     <TableHead>
@@ -90,7 +96,7 @@ const Home = ({ history }) => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
-                            <TableRow key={index}>
+                            <TableRow key={index} style={new Date(row.date) > Date.now() ? {backgroundColor: '#a6d4fa',  } : { backgroundColor: '#648dae', color: '#ffffff' }}>
                                 <TableCell component='th' scope='
                                     row'>
                                     {row.date}
@@ -127,7 +133,6 @@ const Home = ({ history }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
         </div>
     )
 }
