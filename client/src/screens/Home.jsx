@@ -6,6 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { lessonsByUserId } from '../actions/lessonActions'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core'
+import {PaymentDialog} from '../components/PaymentDialog'
 import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
 
@@ -36,6 +37,8 @@ const Home = ({ history }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
 
+    const [sdkReady, setSdkReady] = useState(false)
+
     const userLogin = useSelector(state => state.userLogin)
     const { loading, error, userInfo } = userLogin
 
@@ -55,6 +58,20 @@ const Home = ({ history }) => {
         if (userInfo) {
             getLessons()
         }
+
+        const addPayPalScript = async () => {
+            const response = await fetch('/api/config/paypal', {
+                method: 'GET'
+            })
+            const clientId = await response.text()
+            const script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+            script.async = true
+            script.onLoad = () => setSdkReady(true)
+            document.body.appendChild(script)
+        }
+        addPayPalScript()
     }, [dispatch, history, userInfo])
 
     function createData(date, time, length, location, price, paid) {
@@ -64,7 +81,7 @@ const Home = ({ history }) => {
     // maps lessons to our createData function
     const temp = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid)) : []
     // sorts lessons by date
-    const rows = temp.sort((a,b) => {
+    const rows = temp.sort((a, b) => {
         let dateA = new Date(a.date)
         let dateB = new Date(b.date)
         return dateB - dateA
@@ -75,6 +92,8 @@ const Home = ({ history }) => {
         // Button will show user a modal of their lesson
         // then it will have another payment button
         // user can then click that button and it will take them to payment portal
+        e.preventDefault()
+
     }
     return (
         <div className={classes.root}>
@@ -95,7 +114,7 @@ const Home = ({ history }) => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
-                            <TableRow key={index} style={new Date(row.date) > Date.now() ? {backgroundColor: '#a6d4fa',  } : { backgroundColor: '#648dae' }}>
+                            <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: '#a6d4fa', } : { backgroundColor: '#648dae' }}>
                                 <TableCell component='th' scope='
                                     row'>
                                     {row.date}
@@ -121,10 +140,9 @@ const Home = ({ history }) => {
                                 </TableCell>
                                 <TableCell component='th' scope='row'>
                                     {!row.paid && (
-                                        <Button
-                                            className={classes.button}>
-                                            {'Pay'}
-                                        </Button>
+                                        <>
+                                            <PaymentDialog amount={row.price.toString()} />
+                                        </>
                                     )}
                                 </TableCell>
                             </TableRow>
