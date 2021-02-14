@@ -6,7 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { lessonsByUserId } from '../actions/lessonActions'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core'
-import {PaymentDialog} from '../components/PaymentDialog'
+import { PaymentDialog } from '../components/PaymentDialog'
 import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
 
@@ -74,12 +74,12 @@ const Home = ({ history }) => {
         addPayPalScript()
     }, [dispatch, history, userInfo])
 
-    function createData(date, time, length, location, price, paid) {
-        return { date, time, length, location, price, paid }
+    function createData(date, time, length, location, price, paid, lessonId) {
+        return { date, time, length, location, price, paid, lessonId }
     }
 
     // maps lessons to our createData function
-    const temp = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid)) : []
+    const temp = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid, x.lessonId)) : []
     // sorts lessons by date
     const rows = temp.sort((a, b) => {
         let dateA = new Date(a.date)
@@ -141,7 +141,9 @@ const Home = ({ history }) => {
                                 <TableCell component='th' scope='row'>
                                     {!row.paid && (
                                         <>
-                                            <PaymentDialog amount={row.price.toString()} />
+                                            <PaymentDialog
+                                                amount={row.price.toString()}
+                                                lessonId={row.lessonId} />
                                         </>
                                     )}
                                 </TableCell>

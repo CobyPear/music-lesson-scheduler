@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Dialog, DialogTitle, Button } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import ClearIcon from '@material-ui/icons/Clear'
-import {PayPalButton} from 'react-paypal-button-v2'
+import { PayPalButton } from 'react-paypal-button-v2'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,16 +29,15 @@ const useStyles = makeStyles((theme) => ({
 
 export function SimpleDialog(props) {
     const classes = useStyles()
-    const { onClose, open, setOpen, amount } = props
+    const { onClose, open, setOpen, amount, lessonId } = props
 
     const handleClose = () => {
         setOpen(false)
     }
 
-
     return (
         <Dialog onClose={handleClose} fullWidth={true} aria-labeledby='simple-dialog-title' open={open}>
-            <ClearIcon onClick={onClose}  className={classes.closeIcon}/>
+            <ClearIcon onClick={onClose} className={classes.closeIcon} />
             <DialogTitle className={classes.title} id='payment-dialog-title'>
                 Pay with PayPal
             </DialogTitle>
@@ -58,7 +57,7 @@ export function SimpleDialog(props) {
 }
 
 export function PaymentDialog(props) {
-    const { amount } = props
+    const { amount, lessonId } = props
     const classes = useStyles()
 
     const [open, setOpen] = useState(false)
@@ -78,7 +77,12 @@ export function PaymentDialog(props) {
                 onClick={handleClickOpen}>
                 {'Pay'}
             </Button>
-            <SimpleDialog open={open} setOpen={setOpen} onClose={handleClose} amount={amount} />
+            <SimpleDialog
+                open={open}
+                setOpen={setOpen}
+                onClose={handleClose}
+                amount={amount}
+                lessonId={lessonId} />
         </div>
     )
 }
