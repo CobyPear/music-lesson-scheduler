@@ -15,12 +15,8 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '5px',
         padding: '10px'
     },
-    title: {
-        textAlign: 'center',
-        marginBottom: '8px'
-    },
     closeIcon: {
-        margin: theme.spacing(2),
+        margin: theme.spacing(2, 3),
         '&:hover': {
             cursor: 'pointer',
         }
@@ -36,9 +32,16 @@ export function SimpleDialog(props) {
     }
 
     return (
-        <Dialog onClose={handleClose} fullWidth={true} aria-labeledby='simple-dialog-title' open={open}>
-            <ClearIcon onClick={onClose} className={classes.closeIcon} />
-            <DialogTitle className={classes.title} id='payment-dialog-title'>
+        <Dialog onClose={handleClose} fullWidth={true} open={open}>
+            <ClearIcon
+                onClick={onClose}
+                onKeyDown={(e) => {
+                    if (e.keyboardEvent.code === 27) {
+                        setOpen(false)
+                    }
+                }}
+                className={classes.closeIcon} />
+            <DialogTitle align='center' variant='h1' id='payment-dialog-title'>
                 Pay with PayPal
             </DialogTitle>
             <PayPalButton

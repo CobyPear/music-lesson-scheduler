@@ -71,7 +71,9 @@ const Home = ({ history }) => {
             script.onLoad = () => setSdkReady(true)
             document.body.appendChild(script)
         }
-        addPayPalScript()
+        if (!sdkReady) {
+            addPayPalScript()
+        }
     }, [dispatch, history, userInfo])
 
     function createData(date, time, length, location, price, paid, lessonId) {
