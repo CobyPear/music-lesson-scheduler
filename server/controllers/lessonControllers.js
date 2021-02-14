@@ -77,7 +77,6 @@ const getLessonById = asyncHandler(async(req, res) => {
             }
         })
         const { data } = await response
-        console.log(data)
         res.status(res.statusCode).json(data)
     } catch (error) {
         res.status(404)
@@ -85,6 +84,28 @@ const getLessonById = asyncHandler(async(req, res) => {
     }
 })
 
+// @desc     Mark lesson as paid
+// @route    PUT /api/lessons/paid/:lessonId
+// @access   Private
+const markLessonAsPaid = asyncHandler(async(req,res) => {
+    const lessonId = req.params.lessonId
+    const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
+
+    try {
+        const response = await axios(`http://localhost8080/auth/lesson/paid/${lessonId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        const { data } = await response
+        res.status(res.statusCode).json(data)
+    } catch (error) {
+        res.status(res.statusCode)
+        throw new Error(error)
+    }
+
+})
 module.exports = {
     createLesson,
     getLessonsByUserId,
