@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Dialog, DialogTitle, Button } from '@material-ui/core'
-import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import { lessonsByUserId } from '../actions/lessonActions'
 import ClearIcon from '@material-ui/icons/Clear'
 import { PayPalButton } from 'react-paypal-button-v2'
 
@@ -25,7 +26,10 @@ const useStyles = makeStyles((theme) => ({
 
 export function SimpleDialog(props) {
     const classes = useStyles()
+    const dispatch = useDispatch() 
     const { onClose, open, setOpen, amount, lessonId } = props
+    const userLogin = useSelector(state => state.userLogin)
+    const { loading, error, userInfo } = userLogin
 
     const handleClose = () => {
         setOpen(false)
@@ -47,12 +51,24 @@ export function SimpleDialog(props) {
             <PayPalButton
                 amount={amount}
                 shippingPreference='NO_SHIPPING'
-                onSuccess={(details, data) => {
+                onSuccess={async(details, data) => {
                     alert('Transaction completed by ' + details.payer.name.given_name)
 
                     // TODO: on success, call server and mark lesson as PAID
-
-                    // return fetch(...)
+                    let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
+                    const response = await fetch(`/api/lessons/paid/${lessonId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    const putData = await response.json()
+                    if (putData) {
+                        dispatch(lessonsByUserId(userInfo._id))
+                        return putData, data
+                    } else {
+                        return 'Mark as Paid unsuccessful'
+                    }
                 }}
             />
         </Dialog>

@@ -47,7 +47,6 @@ const Home = ({ history }) => {
 
     const getLessonById = useSelector(state => state.getLessonById)
     const { lessonLoading, lessonError, lesson } = getLessonById
-
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
             history.push('/login')
@@ -74,7 +73,7 @@ const Home = ({ history }) => {
         if (!sdkReady) {
             addPayPalScript()
         }
-    }, [dispatch, history, userInfo])
+    }, [dispatch, history, userInfo, lessons.isPaid])
 
     function createData(date, time, length, location, price, paid, lessonId) {
         return { date, time, length, location, price, paid, lessonId }
@@ -89,14 +88,6 @@ const Home = ({ history }) => {
         return dateB - dateA
     })
 
-    function handleClick(e) {
-        // Payment button logic goes here!
-        // Button will show user a modal of their lesson
-        // then it will have another payment button
-        // user can then click that button and it will take them to payment portal
-        e.preventDefault()
-
-    }
     return (
         <div className={classes.root}>
             <div className='row'>
@@ -145,7 +136,8 @@ const Home = ({ history }) => {
                                         <>
                                             <PaymentDialog
                                                 amount={row.price.toString()}
-                                                lessonId={row.lessonId} />
+                                                lessonId={row.lessonId} 
+                                                />
                                         </>
                                     )}
                                 </TableCell>

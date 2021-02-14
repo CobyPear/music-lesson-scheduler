@@ -92,7 +92,7 @@ const markLessonAsPaid = asyncHandler(async(req,res) => {
     const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
 
     try {
-        const response = await axios(`http://localhost8080/auth/lesson/paid/${lessonId}`, {
+        const response = await axios(`http://localhost:8080/auth/lesson/paid/${lessonId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -109,5 +109,6 @@ const markLessonAsPaid = asyncHandler(async(req,res) => {
 module.exports = {
     createLesson,
     getLessonsByUserId,
-    getLessonById
+    getLessonById,
+    markLessonAsPaid
 }
