@@ -16,7 +16,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper
     },
     table: {
-        minWidth: 650
+        minWidth: 650,
+
+    },
+    tableHeaders: {
+        fontSize: '1.3em'
     },
     xIcon: {
         color: theme.palette.error.light
@@ -29,6 +33,21 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
         marginTop: '5px',
         padding: '10px'
+    },
+    keyRed: {
+        backgroundColor: 'rgba(229, 115, 115, 0.4)',
+        width: 25,
+        height: 25
+    },
+    keyGreen: {
+        backgroundColor: 'rgba(129, 199, 132, 0.4)',
+        width: 25,
+        height: 25,
+    },
+    keyBlue: {
+        backgroundColor: 'rgba(100, 181, 246, 0.4)',
+        width: 25,
+        height: 25
     }
 }))
 
@@ -88,26 +107,63 @@ const Home = ({ history }) => {
         return dateB - dateA
     })
 
+    /**
+     *             <div className="row">
+                    <div className={classes.keyRed}>
+                    </div>
+                        <span>Past</span>
+                </div>
+            <div className="row">
+                    <div className={classes.keyRed}>
+                    </div>
+                        <span>Past</span>
+                </div>
+            <div className="row">
+                    <div className={classes.keyRed}>
+                    </div>
+                        <span>Past</span>
+                </div>
+            </div>
+     */
+
     return (
         <div className={classes.root}>
             <div className='row'>
                 <h1>Welcome {userInfo && userInfo.name}</h1>
             </div>
+            <div className="row">
+
+            <div className="row">
+                <div className={classes.keyBlue}>
+                </div>
+                <span style={{ marginRight: '5px' }}>Today</span>
+            </div>
+            <div className="row">
+                <div className={classes.keyGreen}>
+                </div>
+                <span style={{ marginRight: '5px' }}>Future</span>
+            </div>
+            <div className="row">
+                <div className={classes.keyRed}>
+                </div>
+                <span style={{ marginRight: '5px' }}>Past</span>
+            </div>
+            </div>
+
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label='lessons-table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Time</TableCell>
-                            <TableCell>Length</TableCell>
-                            <TableCell>Location</TableCell>
-                            <TableCell>Price</TableCell>
-                            <TableCell>Paid</TableCell>
+                    <TableHead >
+                        <TableRow >
+                            {
+                                ['Date', 'Time', 'Length', 'Location', 'Price', 'Paid'].map((colName, i) => (
+                                    <TableCell key={i} className={classes.tableHeaders}>{colName}</TableCell>
+                                ))
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
-                            <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)'} : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
+                            <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)' } : new Date(row.date).toLocaleDateString() === new Date(Date.now()).toLocaleDateString() ? { backgroundColor: 'rgba(100, 181, 246, 0.4)' } : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
                                 <TableCell component='th' scope='
                                     row'>
                                     {row.date}
@@ -126,7 +182,7 @@ const Home = ({ history }) => {
                                 </TableCell>
                                 <TableCell component='th' scope='
                                     row'>
-                                    ${row.price}
+                ${row.price}
                                 </TableCell>
                                 <TableCell component='th' scope='row'>
                                     {!row.paid ? <ClearIcon className={classes.xIcon} /> : <DoneIcon className={classes.checkIcon} />}
@@ -136,8 +192,8 @@ const Home = ({ history }) => {
                                         <>
                                             <PaymentDialog
                                                 amount={row.price.toString()}
-                                                lessonId={row.lessonId} 
-                                                />
+                                                lessonId={row.lessonId}
+                                            />
                                         </>
                                     )}
                                 </TableCell>
@@ -146,7 +202,7 @@ const Home = ({ history }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div>
+        </div >
     )
 }
 
