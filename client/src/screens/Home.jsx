@@ -107,25 +107,6 @@ const Home = ({ history }) => {
         return dateB - dateA
     })
 
-    /**
-     *             <div className="row">
-                    <div className={classes.keyRed}>
-                    </div>
-                        <span>Past</span>
-                </div>
-            <div className="row">
-                    <div className={classes.keyRed}>
-                    </div>
-                        <span>Past</span>
-                </div>
-            <div className="row">
-                    <div className={classes.keyRed}>
-                    </div>
-                        <span>Past</span>
-                </div>
-            </div>
-     */
-
     return (
         <div className={classes.root}>
             <div className='row'>
