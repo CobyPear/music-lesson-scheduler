@@ -48,6 +48,8 @@ app.use('/auth', authRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/lessons', lessonRoutes)
 
+app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID))
+
 // Static routes depending on production or development environment
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/client/build')))

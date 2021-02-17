@@ -159,7 +159,6 @@ const authGetLessonsByUserId = asyncHandler(async(req, res) => {
 // @route    GET /auth/findlesson/:lessonId
 // @access   Private
 const authGetLessonById = asyncHandler(async(req, res) => {
-    console.log('req.params.lessonId', req.params.lessonId)
     const findLesson = await Lesson.findById(req.params.lessonId)
     if (!findLesson) {
         res.status(404)
@@ -169,4 +168,18 @@ const authGetLessonById = asyncHandler(async(req, res) => {
     }
 })
 
-module.exports = { authUser, authRegisterUser, authCreateLesson, authGetUserById, authGetLessonsByUserId, authGetLessonById }
+// @desc     Mark lesson as paid
+// @route    PUT /auth/lesson/paid/:lessonId
+// @access   Private
+const authMarkLessonAsPaid = asyncHandler(async(req,res) => {
+    const lessonId = req.params.lessonId
+    Lesson.findOneAndUpdate({ _id: lessonId}, { isPaid: true}, (err) => {
+        if (err) {
+            res.status(res.statusCode)
+            throw new Error(err)
+        }
+        res.status(res.statusCode).json({ message: 'Lesson marked as paid'})
+    })
+})
+
+module.exports = { authUser, authRegisterUser, authCreateLesson, authGetUserById, authGetLessonsByUserId, authGetLessonById, authMarkLessonAsPaid }

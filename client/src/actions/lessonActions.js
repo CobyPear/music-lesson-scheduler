@@ -33,6 +33,7 @@ export const lessonsByUserId = (id) => async(dispatch) => {
         dispatch({ type: FLAT_LESSON_TRY })
         let flatLessons = []
         data.forEach(x => flatLessons.push({
+            lessonId: x._id,
             date: new Date(x.date).toLocaleDateString(),
             time: x.time,
             length: x['length'],

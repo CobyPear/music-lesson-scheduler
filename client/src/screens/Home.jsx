@@ -5,7 +5,8 @@ import DoneIcon from '@material-ui/icons/Done'
 import ClearIcon from '@material-ui/icons/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { lessonsByUserId } from '../actions/lessonActions'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
+import { PaymentDialog } from '../components/PaymentDialog'
 import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
 
@@ -15,7 +16,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.background.paper
     },
     table: {
-        minWidth: 650
+        minWidth: 650,
+
+    },
+    tableHeaders: {
+        fontSize: '1.3em'
     },
     xIcon: {
         color: theme.palette.error.light
@@ -24,10 +29,25 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.success.main
     },
     button: {
-        backgroundColor: theme.palette.success.light,
+        backgroundColor: theme.palette.success.dark,
         color: 'white',
         marginTop: '5px',
         padding: '10px'
+    },
+    keyRed: {
+        backgroundColor: 'rgba(229, 115, 115, 0.4)',
+        width: 25,
+        height: 25
+    },
+    keyGreen: {
+        backgroundColor: 'rgba(129, 199, 132, 0.4)',
+        width: 25,
+        height: 25,
+    },
+    keyBlue: {
+        backgroundColor: 'rgba(100, 181, 246, 0.4)',
+        width: 25,
+        height: 25
     }
 }))
 
@@ -35,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
 const Home = ({ history }) => {
     const classes = useStyles()
     const dispatch = useDispatch()
+
+    const [sdkReady, setSdkReady] = useState(false)
 
     const userLogin = useSelector(state => state.userLogin)
     const { loading, error, userInfo } = userLogin
@@ -44,7 +66,6 @@ const Home = ({ history }) => {
 
     const getLessonById = useSelector(state => state.getLessonById)
     const { lessonLoading, lessonError, lesson } = getLessonById
-
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
             history.push('/login')
@@ -55,47 +76,75 @@ const Home = ({ history }) => {
         if (userInfo) {
             getLessons()
         }
-    }, [dispatch, history, userInfo])
 
-    function createData(date, time, length, location, price, paid) {
-        return { date, time, length, location, price, paid }
+        const addPayPalScript = async () => {
+            const response = await fetch('/api/config/paypal', {
+                method: 'GET'
+            })
+            const clientId = await response.text()
+            const script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+            script.async = true
+            script.onLoad = () => setSdkReady(true)
+            document.body.appendChild(script)
+        }
+        if (!sdkReady) {
+            addPayPalScript()
+        }
+    }, [dispatch, history, userInfo, lessons.isPaid])
+
+    function createData(date, time, length, location, price, paid, lessonId) {
+        return { date, time, length, location, price, paid, lessonId }
     }
 
     // maps lessons to our createData function
-    const temp = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid)) : []
+    const temp = flatLessons ? flatLessons.map((x, i) => createData(x.date, x.time, x['length'], x.location, x.price, x.paid, x.lessonId)) : []
     // sorts lessons by date
-    const rows = temp.sort((a,b) => {
+    const rows = temp.sort((a, b) => {
         let dateA = new Date(a.date)
         let dateB = new Date(b.date)
         return dateB - dateA
     })
 
-    function handleClick(e) {
-        // Payment button logic goes here!
-        // Button will show user a modal of their lesson
-        // then it will have another payment button
-        // user can then click that button and it will take them to payment portal
-    }
     return (
         <div className={classes.root}>
             <div className='row'>
                 <h1>Welcome {userInfo && userInfo.name}</h1>
             </div>
+            <div className="row">
+
+            <div className="row">
+                <div className={classes.keyBlue}>
+                </div>
+                <span style={{ marginRight: '5px' }}>Today</span>
+            </div>
+            <div className="row">
+                <div className={classes.keyGreen}>
+                </div>
+                <span style={{ marginRight: '5px' }}>Future</span>
+            </div>
+            <div className="row">
+                <div className={classes.keyRed}>
+                </div>
+                <span style={{ marginRight: '5px' }}>Past</span>
+            </div>
+            </div>
+
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label='lessons-table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Time</TableCell>
-                            <TableCell>Length</TableCell>
-                            <TableCell>Location</TableCell>
-                            <TableCell>Price</TableCell>
-                            <TableCell>Paid</TableCell>
+                    <TableHead >
+                        <TableRow >
+                            {
+                                ['Date', 'Time', 'Length', 'Location', 'Price', 'Paid'].map((colName, i) => (
+                                    <TableCell key={i} className={classes.tableHeaders}>{colName}</TableCell>
+                                ))
+                            }
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
-                            <TableRow key={index} style={new Date(row.date) > Date.now() ? {backgroundColor: '#a6d4fa',  } : { backgroundColor: '#648dae' }}>
+                            <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)' } : new Date(row.date).toLocaleDateString() === new Date(Date.now()).toLocaleDateString() ? { backgroundColor: 'rgba(100, 181, 246, 0.4)' } : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
                                 <TableCell component='th' scope='
                                     row'>
                                     {row.date}
@@ -114,17 +163,19 @@ const Home = ({ history }) => {
                                 </TableCell>
                                 <TableCell component='th' scope='
                                     row'>
-                                    {row.price}
+                ${row.price}
                                 </TableCell>
                                 <TableCell component='th' scope='row'>
                                     {!row.paid ? <ClearIcon className={classes.xIcon} /> : <DoneIcon className={classes.checkIcon} />}
                                 </TableCell>
                                 <TableCell component='th' scope='row'>
                                     {!row.paid && (
-                                        <Button
-                                            className={classes.button}>
-                                            {'Pay'}
-                                        </Button>
+                                        <>
+                                            <PaymentDialog
+                                                amount={row.price.toString()}
+                                                lessonId={row.lessonId}
+                                            />
+                                        </>
                                     )}
                                 </TableCell>
                             </TableRow>
@@ -132,7 +183,7 @@ const Home = ({ history }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div>
+        </div >
     )
 }
 
