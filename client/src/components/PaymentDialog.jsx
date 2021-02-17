@@ -53,8 +53,7 @@ export function SimpleDialog(props) {
                 shippingPreference='NO_SHIPPING'
                 onSuccess={async(details, data) => {
                     alert('Transaction completed by ' + details.payer.name.given_name)
-
-                    // TODO: on success, call server and mark lesson as PAID
+                    
                     let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
                     const response = await fetch(`/api/lessons/paid/${lessonId}`, {
                         method: 'PUT',

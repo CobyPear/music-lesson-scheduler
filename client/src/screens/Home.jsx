@@ -5,7 +5,7 @@ import DoneIcon from '@material-ui/icons/Done'
 import ClearIcon from '@material-ui/icons/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { lessonsByUserId } from '../actions/lessonActions'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
 import { PaymentDialog } from '../components/PaymentDialog'
 import '../css/Home.css'
 import 'react-calendar/dist/Calendar.css'
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.success.main
     },
     button: {
-        backgroundColor: theme.palette.success.light,
+        backgroundColor: theme.palette.success.dark,
         color: 'white',
         marginTop: '5px',
         padding: '10px'
@@ -107,7 +107,7 @@ const Home = ({ history }) => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row, index) => (
-                            <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: '#a6d4fa', } : { backgroundColor: '#648dae' }}>
+                            <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)'} : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
                                 <TableCell component='th' scope='
                                     row'>
                                     {row.date}
@@ -126,7 +126,7 @@ const Home = ({ history }) => {
                                 </TableCell>
                                 <TableCell component='th' scope='
                                     row'>
-                                    {row.price}
+                                    ${row.price}
                                 </TableCell>
                                 <TableCell component='th' scope='row'>
                                     {!row.paid ? <ClearIcon className={classes.xIcon} /> : <DoneIcon className={classes.checkIcon} />}
