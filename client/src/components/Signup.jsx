@@ -22,7 +22,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Coby Sher
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -32,6 +32,7 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
+    flexGrow: 1,
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
+    flexGrow: 1,
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
@@ -52,14 +54,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-  const [name, setName] = useState()
+  const [name, setName] = useState('')
   const [instrument, setInstrument] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(e.target)
+    console.log(name, email, password, instrument)
   }
 
   return (
@@ -71,20 +73,49 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <FormControl className={classes.form} noValidate onSubmit={onSubmit}>
+        <form className={classes.form} noValidate onSubmit={onSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-             <InputLabel htmlFor='name'>Name</InputLabel>
-             <Input onChange={setName} value={name ? name.toString() : ''} name='name' type='text' id='name'></Input>
+            <Grid item xs={6}>
+              <InputLabel htmlFor='name'>Name</InputLabel>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                name='name'
+                type='text'
+                id='name'
+              >
+              </Input>
+            </Grid>
+            <Grid item xs={6}>
+              <InputLabel htmlFor='instrument'>Instrument</InputLabel>
+              <Input onChange={(e) => setInstrument(e.target.value)}
+                value={instrument}
+                name='instrument'
+                type='text'
+                id='instrument'
+              >
+              </Input>
             </Grid>
             <Grid item xs={12}>
-            
+              <InputLabel htmlFor='email'>Email</InputLabel>
+              <Input onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                name='email'
+                type='text'
+                id='email'
+              >
+              </Input>
             </Grid>
             <Grid item xs={12}>
-             
-            </Grid>
-            <Grid item xs={12}>
-             
+              <InputLabel htmlFor='password'>Password</InputLabel>
+              <Input onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                name='password'
+                type='password'
+                id='password'
+              >
+              </Input>
+
             </Grid>
           </Grid>
           <Button
@@ -97,13 +128,13 @@ export default function SignUp() {
             Sign Up
           </Button>
           <Grid container justify="flex-end">
-            <Grid item>
+            <Grid item xs={12}>
               <Link href="#" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
-        </FormControl>
+        </form>
       </div>
       <Box mt={5}>
         <Copyright />
