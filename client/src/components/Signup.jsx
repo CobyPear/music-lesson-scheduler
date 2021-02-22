@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  input: {
+    display: 'flex'
+  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
@@ -75,20 +78,23 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <InputLabel htmlFor='name'>Name</InputLabel>
               <Input
-                value={name}
+                className={classes.input}
                 onChange={(e) => setName(e.target.value)}
+                value={name}
                 name='name'
                 type='text'
                 id='name'
               >
               </Input>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <InputLabel htmlFor='instrument'>Instrument</InputLabel>
-              <Input onChange={(e) => setInstrument(e.target.value)}
+              <Input
+                className={classes.input}
+                onChange={(e) => setInstrument(e.target.value)}
                 value={instrument}
                 name='instrument'
                 type='text'
@@ -98,7 +104,9 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <InputLabel htmlFor='email'>Email</InputLabel>
-              <Input onChange={(e) => setEmail(e.target.value)}
+              <Input
+                className={classes.input}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 name='email'
                 type='text'
@@ -108,7 +116,9 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <InputLabel htmlFor='password'>Password</InputLabel>
-              <Input onChange={(e) => setPassword(e.target.value)}
+              <Input
+                className={classes.input}
+                onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 name='password'
                 type='password'
