@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Login({ location, history }) {
+export default function Login({ history }) {
   const classes = useStyles();
 
   const [email, setEmail] = useState()

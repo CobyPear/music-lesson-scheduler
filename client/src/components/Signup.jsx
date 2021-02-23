@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux'
+import { register } from '../actions/userActions'
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel'
 import Input from '@material-ui/core/Input'
 import Link from '@material-ui/core/Link';
@@ -11,7 +14,6 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { FormControl } from '@material-ui/core';
 
 
 
@@ -55,16 +57,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp({ history }) {
   const classes = useStyles();
   const [name, setName] = useState('')
   const [instrument, setInstrument] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  
+  const dispatch = useDispatch()
+
+  const userLogin = useSelector(state => state.userLogin)
+  const { loading, error, userInfo } = userLogin
+
+
+  useEffect(() => {
+    if (userInfo !== null && userInfo?._id) {
+      history.push('/home')
+    }
+  }, [history, userInfo])
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log(name, email, password, instrument)
+    dispatch(register(name, email, password, instrument))
   }
 
   return (
