@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Login({ location, history }) {
+export default function Login({ history }) {
   const classes = useStyles();
 
   const [email, setEmail] = useState()
@@ -121,10 +121,10 @@ export default function Login({ location, history }) {
               <h2 className={classes.error}>{error}, please check your email and password</h2>
             </div>
           }
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
@@ -134,14 +134,14 @@ export default function Login({ location, history }) {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
+          <Grid container justify='center'>
+            {/* <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
-            </Grid>
+            </Grid> */}
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/signup">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

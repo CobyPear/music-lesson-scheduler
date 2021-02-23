@@ -54,8 +54,9 @@ const registerUser = asyncHandler(async(req, res) => {
         })
         const { data: { userData, token } } = await response
         req.session.jwt = token
+        req.jwt = token
 
-        res.status(200).json({
+        res.status(201).json({
             userData: {
                 _id: userData._id,
                 name: userData.name,
