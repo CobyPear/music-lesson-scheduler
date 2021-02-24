@@ -143,16 +143,16 @@ const authCreateLesson = asyncHandler(async(req, res) => {
 const authGetLessonsByUserId = asyncHandler(async(req, res) => {
     (await User.findById(req.params.userId).select('-password'))
     .populate({ path: 'lessons' })
-        .execPopulate((err, userAndLessons) => {
-            if (err) return err
-            if (userAndLessons) {
-                const { lessons } = userAndLessons
-                res.status(res.statusCode).json(lessons)
-            } else {
-                res.status(404)
-                throw new Error('User not found')
-            }
-        })
+    .execPopulate((err, userAndLessons) => {
+        if (err) return err
+        if (userAndLessons) {
+            const { lessons } = userAndLessons
+            res.status(res.statusCode).json(lessons)
+        } else {
+            res.status(404)
+            throw new Error('User not found')
+        }
+    })
 })
 
 // @desc     Get one lesson by id associated by a user by ID
