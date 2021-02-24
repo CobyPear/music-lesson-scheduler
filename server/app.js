@@ -18,7 +18,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(session({ 
-    secret: 'lowpass[filter',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: new MemoryStore({
