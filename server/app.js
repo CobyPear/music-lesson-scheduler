@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path')
-const logger = require('morgan')
 const errorHandler = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -13,7 +12,7 @@ dotenv.config()
 // mongoose connection to db
 connectDB()
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 8080
 const app = express()
 app.use(express.json())
 app.use(cookieParser())
@@ -57,6 +56,7 @@ if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => res.sendFile(path.resolve('client', 'build', 'index.html')))
 
 } else {
+    const logger = require('morgan')
     // use Morgan logger if in development environment
     app.use(logger('dev'))
 
