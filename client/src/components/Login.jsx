@@ -118,7 +118,7 @@ export default function Login({ history }) {
           />
           {
             error && <div className="row">
-              <h2 className={classes.error}>{error.message}, please check your email and password</h2>
+              <h2 className={classes.error}>{error?.message}, please check your email and password</h2>
             </div>
           }
           {/* <FormControlLabel
