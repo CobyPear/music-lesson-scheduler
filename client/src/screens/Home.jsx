@@ -92,7 +92,7 @@ const Home = ({ history }) => {
         if (!sdkReady) {
             addPayPalScript()
         }
-    }, [dispatch, history, userInfo, lessons.isPaid])
+    }, [dispatch, history, userInfo, lessons?.isPaid])
 
     function createData(date, time, length, location, price, paid, lessonId) {
         return { date, time, length, location, price, paid, lessonId }
@@ -114,77 +114,72 @@ const Home = ({ history }) => {
             </div>
             {flatLessons?.length > 0 ?
                 (
-            <>
-            <div className="row">
+                    <>
+                        <div className="row">
 
-                <div className="row">
-                    <div className={classes.keyBlue}>
-                    </div>
-                    <span style={{ marginRight: '5px' }}>Today</span>
-                </div>
-                <div className="row">
-                    <div className={classes.keyGreen}>
-                    </div>
-                    <span style={{ marginRight: '5px' }}>Future</span>
-                </div>
-                <div className="row">
-                    <div className={classes.keyRed}>
-                    </div>
-                    <span style={{ marginRight: '5px' }}>Past</span>
-                </div>
-            </div>
-                    <TableContainer component={Paper}>
-                        <Table className={classes.table} aria-label='lessons-table'>
-                            <TableHead >
-                                <TableRow >
-                                    {
-                                        ['Date', 'Time', 'Length', 'Location', 'Price', 'Paid'].map((colName, i) => (
-                                            <TableCell key={i} className={classes.tableHeaders}>{colName}</TableCell>
-                                        ))
-                                    }
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row, index) => (
-                                    <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)' } : new Date(row.date).toLocaleDateString() === new Date(Date.now()).toLocaleDateString() ? { backgroundColor: 'rgba(100, 181, 246, 0.4)' } : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
-                                        <TableCell component='th' scope='
-                                    row'>
-                                            {row.date}
-                                        </TableCell>
-                                        <TableCell component='th' scope='
-                                    row'>
-                                            {row.time}
-                                        </TableCell>
-                                        <TableCell component='th' scope='
-                                    row'>
-                                            {row.length}
-                                        </TableCell>
-                                        <TableCell component='th' scope='
-                                    row'>
-                                            {row.location}
-                                        </TableCell>
-                                        <TableCell component='th' scope='
-                                    row'>
-                                            ${row.price}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row'>
-                                            {!row.paid ? <ClearIcon className={classes.xIcon} /> : <DoneIcon className={classes.checkIcon} />}
-                                        </TableCell>
-                                        <TableCell component='th' scope='row'>
-                                            {!row.paid && (
-                                                <>
-                                                    <PaymentDialog
-                                                        amount={row.price.toString()}
-                                                        lessonId={row.lessonId}
-                                                    />
-                                                </>
-                                            )}
-                                        </TableCell>
+                            <div className="row">
+                                <div className={classes.keyBlue}>
+                                </div>
+                                <span style={{ marginRight: '5px' }}>Today</span>
+                            </div>
+                            <div className="row">
+                                <div className={classes.keyGreen}>
+                                </div>
+                                <span style={{ marginRight: '5px' }}>Future</span>
+                            </div>
+                            <div className="row">
+                                <div className={classes.keyRed}>
+                                </div>
+                                <span style={{ marginRight: '5px' }}>Past</span>
+                            </div>
+                        </div>
+                        <TableContainer component={Paper}>
+                            <Table className={classes.table} aria-label='lessons-table'>
+                                <TableHead >
+                                    <TableRow >
+                                        {
+                                            ['Date', 'Time', 'Length', 'Location', 'Price', 'Paid'].map((colName, i) => (
+                                                <TableCell key={i} className={classes.tableHeaders}>{colName}</TableCell>
+                                            ))
+                                        }
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.map((row, index) => (
+                                        <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)' } : new Date(row.date).toLocaleDateString() === new Date(Date.now()).toLocaleDateString() ? { backgroundColor: 'rgba(100, 181, 246, 0.4)' } : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
+                                            <TableCell component='th' scope='row'>
+                                                {row.date}
+                                            </TableCell>
+                                            <TableCell component='th' scope='row'>
+                                                {row.time}
+                                            </TableCell>
+                                            <TableCell component='th' scope='row'>
+                                                {row.length}
+                                            </TableCell>
+                                            <TableCell component='th' scope='ow'>
+                                                {row.location}
+                                            </TableCell>
+                                            <TableCell component='th' scope='row'>
+                                                ${row.price}
+                                            </TableCell>
+                                            <TableCell component='th' scope='row'>
+                                                {!row.paid ? <ClearIcon className={classes.xIcon} /> : <DoneIcon className={classes.checkIcon} />}
+                                            </TableCell>
+                                            <TableCell component='th' scope='row'>
+                                                {!row.paid && (
+                                                    <>
+                                                        <PaymentDialog
+                                                            amount={row.price.toString()}
+                                                            lessonId={row.lessonId}
+                                                        />
+                                                    </>
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </>
                 ) : (
                     <h2 style={{ display: 'flex', justifyContent: 'center' }}> No lessons yet. Sign up for a lesson!</h2>

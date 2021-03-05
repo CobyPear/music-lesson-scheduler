@@ -33,21 +33,23 @@ export const register = (name, email, password, instrument) => async(dispatch) =
 
         const data  = await resp.json()
         console.log(data)
-        sessionStorage.setItem('userInfo', JSON.stringify({...data}))
-        dispatch({
-            type: USER_REGISTER_SUCCESS,
-            payload: data
-        })
-
-        dispatch({
-            type: USER_LOGIN_SUCCESS,
-            payload: data
-        })
-
-        // set user info and token in session storage, then change to homepage
-        window.location.href = '/home'
-        sessionStorage.setItem('userInfo', JSON.stringify(data.userData))
-        sessionStorage.setItem('token', JSON.stringify(data.token))
+        if (data === undefined || data.message) {
+            console.log(data)
+            throw data.message
+        } else {
+            dispatch({
+                type: USER_REGISTER_SUCCESS,
+                payload: data
+            })
+            dispatch({
+                type: USER_LOGIN_SUCCESS,
+                payload: data
+            })
+            console.log(data)
+            window.location.href = '/home'
+            sessionStorage.setItem('userInfo', JSON.stringify(data.userData))
+            sessionStorage.setItem('token', JSON.stringify(data.token))
+        }
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
