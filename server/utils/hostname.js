@@ -1,0 +1,1 @@
+module.exports = hostname = process.env.NODE_ENV === 'production' ? 'sleepy-thicket-21120.herokuapp.com' : 'localhost:8080'

@@ -7,7 +7,7 @@ const axios = require('axios')
 const loginUser = asyncHandler(async(req, res) => {
     const { email, password } = req.body
     try {
-        const response = await axios('http://localhost:8080/auth/local', {
+        const response = await axios(`http://${hostname}/auth/local`, {
             method: 'POST',
             data: {
                 email,
@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async(req, res) => {
     const { email, password, name, instrument, isAdmin } = req.body
 
     try {
-        const response = await axios('http://localhost:8080/auth/register', {
+        const response = await axios(`http://${hostname}/auth/register`, {
             method: 'POST',
             data: {
                 email: email,
@@ -77,7 +77,7 @@ const registerUser = asyncHandler(async(req, res) => {
 const getUserById = asyncHandler(async(req, res) => {
     const token = req.session.jwt ? req.session.jwt : req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : ''
     try {
-        const response = await axios(`http://localhost:8080/auth/users/${req.params.id}`, {
+        const response = await axios(`http://${hostname}/auth/users/${req.params.id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

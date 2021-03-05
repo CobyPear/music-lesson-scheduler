@@ -1,6 +1,5 @@
 const express = require('express')
 const path = require('path')
-const logger = require('morgan')
 const errorHandler = require('./middleware/errorMiddleware')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
@@ -18,7 +17,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(session({ 
-    secret: 'lowpass[filter',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     store: new MemoryStore({
@@ -52,11 +51,12 @@ app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_I
 
 // Static routes depending on production or development environment
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '/client/build')))
+    app.use(express.static('client/build'))
 
-    app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')))
+    app.get('*', (req, res) => res.sendFile(path.resolve('client', 'build', 'index.html')))
 
 } else {
+    const logger = require('morgan')
     // use Morgan logger if in development environment
     app.use(logger('dev'))
 
