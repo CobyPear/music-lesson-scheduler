@@ -68,7 +68,7 @@ const Home = ({ history }) => {
     const { lessonLoading, lessonError, lesson } = getLessonById
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
-            history.push('/login')
+            history?.push('/login')
         }
         const getLessons = () => {
             dispatch(lessonsByUserId(userInfo._id))
