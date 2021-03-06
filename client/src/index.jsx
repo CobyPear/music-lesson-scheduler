@@ -5,11 +5,9 @@ import store from './store'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Header2 from './components/Header2'
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Header2 />
       <App />
     </Provider>
   </React.StrictMode>,

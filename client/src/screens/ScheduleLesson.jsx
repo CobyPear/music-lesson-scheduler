@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createLesson  as lessonCreate } from '../actions/lessonActions'
+import { createLesson as lessonCreate } from '../actions/lessonActions'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
@@ -20,7 +20,10 @@ import {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        flexDirection: 'row',
+        position: 'relative',
+        top: 100
     },
     formEl: {
         margin: theme.spacing(2)
@@ -116,55 +119,53 @@ export const ScheduleLesson = ({ history }) => {
 
     }
     return (
-        <div className={classes.root}>
-            <form onSubmit={submitHandler}>
-                <Grid container justify='center' spacing={5}>
-                    <MaterialUIPickers
-                        selectedDate={selectedDate}
-                        handleDateChange={handleDateChange}
-                        classes={classes}
-                    />
-                    <Grid item xs={1}>
-                        <FormControl>
-                            <InputLabel
-                                id='lesson-length-select-label'>
-                                Length
+        <form onSubmit={submitHandler}>
+            <Grid className={classes.root} container justify='center' spacing={1}>
+                <MaterialUIPickers
+                    selectedDate={selectedDate}
+                    handleDateChange={handleDateChange}
+                    classes={classes}
+                />
+                <Grid item xs={3}>
+                    <FormControl>
+                        <InputLabel
+                            id='lesson-length-select-label'>
+                            Length
                                 </InputLabel>
-                            <Select
-                                labelId='lesson-length-select-label'
-                                id='lesson-length=select'
-                                value={lessonLength}
-                                onChange={(e) => {
-                                    setLessonLength(e.target.value)
-                                    updatePrice(e.target.value)
-                                }}
-                            >
-                                <MenuItem value={30}>30</MenuItem>
-                                <MenuItem value={45}>45</MenuItem>
-                                <MenuItem value={60}>60</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <p>{`$ ${lessonPrice}`}</p>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <TextField
-                            label='Location'
-                            value={lessonLocation}
-                            onChange={(e) => setLessonLocation(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button className={classes.center} type='submit'>Submit</Button>
-                    </Grid>
-                    <Grid>
-                        {createLessonLoading && <CircularProgress />}
-                        {success && <p>Success! Lesson Scheduled</p>}
-                    </Grid>
+                        <Select
+                            labelId='lesson-length-select-label'
+                            id='lesson-length=select'
+                            value={lessonLength}
+                            onChange={(e) => {
+                                setLessonLength(e.target.value)
+                                updatePrice(e.target.value)
+                            }}
+                        >
+                            <MenuItem value={30}>30</MenuItem>
+                            <MenuItem value={45}>45</MenuItem>
+                            <MenuItem value={60}>60</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Grid>
-            </form>
-        </div>
+                <Grid item xs={3}>
+                    <p>{`$ ${lessonPrice}`}</p>
+                </Grid>
+                <Grid item xs={3}>
+                    <TextField
+                        label='Location'
+                        value={lessonLocation}
+                        onChange={(e) => setLessonLocation(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button className={classes.center} type='submit'>Submit</Button>
+                </Grid>
+                <Grid>
+                    {createLessonLoading && <CircularProgress />}
+                    {success && <p>Success! Lesson Scheduled</p>}
+                </Grid>
+            </Grid>
+        </form>
     )
 }
 
