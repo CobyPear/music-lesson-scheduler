@@ -72,7 +72,7 @@ const Header2 = () => {
   return (
     <AppBar>
       <Toolbar>
-        <Container className={classes.flex}>
+        <Container maxWidth='md' className={classes.flex}>
           <IconButton edge='start'
             color='inherit'
             aria-label='home'>

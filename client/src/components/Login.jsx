@@ -30,6 +30,9 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(12)
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -82,7 +85,7 @@ export default function Login({ history }) {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className={classes.container} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -118,7 +121,7 @@ export default function Login({ history }) {
           />
           {
             error && <div className="row">
-              <h2 className={classes.error}>{error?.message}, please check your email and password</h2>
+              <h2 className={classes.error}>{error?.message} please check your email and password</h2>
             </div>
           }
           {/* <FormControlLabel
