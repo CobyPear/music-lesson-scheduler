@@ -81,7 +81,7 @@ const Header2 = () => {
           <List
             className={classes.navDisplayFlex}
             component="nav"
-            aria-labeled-by="main navigation">
+            aria-labelledby="main navigation">
             {
               navlinks.map(({ title, path }) => (
                 <Link href={path} key={title} className={classes.linkText}>

@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createLesson as lessonCreate } from '../actions/lessonActions'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { Select, FormControl, MenuItem, TextField, InputLabel } from '@material-ui/core'
+import { Select, FormControl, MenuItem, TextField, InputLabel, Container } from '@material-ui/core'
 
 import 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
@@ -21,18 +20,41 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        flexDirection: 'row',
+        // flexDirection: 'row',
         position: 'relative',
-        top: 100
+        top: 100,
+        border: 'solid black 1px',
+        backgroundColor: 'rgba(120, 175, 245, 0.3)'
     },
-    formEl: {
-        margin: theme.spacing(2)
+    form: {
+        flexGrow: 1,
+        display: 'flex',
+        width: '80%', // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
     },
     datePicker: {
         margin: theme.spacing(1)
     },
-    center: {
-        marginLeft: '50%'
+    price: {
+        borderColor: 'red',
+        color: theme.palette.success.dark,
+        textShadow: '0px 0px 2px white ',
+    },
+    flex: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '500px'
+    },
+    topRow: {
+        marginBottom: '30px'
+    },
+    buttonRow: {
+        display: 'flex',
+        justifyContent: 'center'
+    },
+    submitBtn: {
+        color: theme.palette.primary.dark,
+        backgroundColor: 'white',
     }
 
 }))
@@ -40,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 export const MaterialUIPickers = ({ selectedDate, handleDateChange, classes }) => {
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="center">
+            <Grid container justify="center" className={classes.topRow}>
                 <KeyboardDatePicker
                     className={classes.datePicker}
                     margin="normal"
@@ -119,53 +141,51 @@ export const ScheduleLesson = ({ history }) => {
 
     }
     return (
-        <form onSubmit={submitHandler}>
-            <Grid className={classes.root} container justify='center' spacing={1}>
-                <MaterialUIPickers
-                    selectedDate={selectedDate}
-                    handleDateChange={handleDateChange}
-                    classes={classes}
-                />
-                <Grid item xs={3}>
-                    <FormControl>
-                        <InputLabel
-                            id='lesson-length-select-label'>
-                            Length
-                                </InputLabel>
-                        <Select
-                            labelId='lesson-length-select-label'
-                            id='lesson-length=select'
-                            value={lessonLength}
-                            onChange={(e) => {
-                                setLessonLength(e.target.value)
-                                updatePrice(e.target.value)
-                            }}
-                        >
-                            <MenuItem value={30}>30</MenuItem>
-                            <MenuItem value={45}>45</MenuItem>
-                            <MenuItem value={60}>60</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={3}>
-                    <p>{`$ ${lessonPrice}`}</p>
-                </Grid>
-                <Grid item xs={3}>
-                    <TextField
-                        label='Location'
-                        value={lessonLocation}
-                        onChange={(e) => setLessonLocation(e.target.value)}
+        <Container component="main" maxWidth="md">
+            <form className={classes.form} onSubmit={submitHandler}>
+                <Grid className={classes.root} container justify='center' spacing={1}>
+                    <MaterialUIPickers
+                        selectedDate={selectedDate}
+                        handleDateChange={handleDateChange}
+                        classes={classes}
                     />
+                    <div className={classes.flex}>
+                        <FormControl>
+                            <InputLabel
+                                id='lesson-length-select-label'>
+                                Length
+                                </InputLabel>
+                            <Select
+                                labelId='lesson-length-select-label'
+                                id='lesson-length=select'
+                                value={lessonLength}
+                                onChange={(e) => {
+                                    setLessonLength(e.target.value)
+                                    updatePrice(e.target.value)
+                                }}
+                            >
+                                <MenuItem value={30}>30</MenuItem>
+                                <MenuItem value={45}>45</MenuItem>
+                                <MenuItem value={60}>60</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <p className={classes.price}><strong>Price: </strong>{`$ ${lessonPrice}`}</p>
+                        <TextField
+                            label='Location'
+                            value={lessonLocation}
+                            onChange={(e) => setLessonLocation(e.target.value)}
+                        />
+                    </div>
+                    <Grid item xs={12} className={classes.buttonRow}>
+                        <Button className={classes.submitBtn} type='submit'>Submit</Button>
+                    </Grid>
+                    <Grid>
+                        {createLessonLoading && <CircularProgress />}
+                        {success && <p>Success! Lesson Scheduled</p>}
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <Button className={classes.center} type='submit'>Submit</Button>
-                </Grid>
-                <Grid>
-                    {createLessonLoading && <CircularProgress />}
-                    {success && <p>Success! Lesson Scheduled</p>}
-                </Grid>
-            </Grid>
-        </form>
+            </form>
+        </Container>
     )
 }
 
