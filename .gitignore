@@ -1,7 +1,3 @@
 .vscode
 node_modules
-<<<<<<< HEAD
-/.env
-=======
 .env
->>>>>>> b28b6e1ca4f23213a015e2e60204f675633e0841
