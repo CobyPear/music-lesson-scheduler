@@ -112,7 +112,7 @@ const Home = ({ history }) => {
     return (
         <div className={classes.root}>
             <div className='row'>
-                <h1>Welcome {userInfo && userInfo.name}</h1>
+                <h1>Welcome, {userInfo && userInfo.name}!</h1>
             </div>
             {flatLessons?.length > 0 ?
                 (

@@ -8,11 +8,11 @@ import Home from './screens/Home'
 import { ScheduleLesson } from './screens/ScheduleLesson'
 
 
-function App() {
+function App(props) {
   return (
     <>
     <Router>
-      <Header />
+      <Header history={props.history} />
       <Route path='/' exact component={Welcome} />
       <Route path='/login' component={Login} />
       <Route path='/signup' component={SignUp} />

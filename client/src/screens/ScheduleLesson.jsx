@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { Select, FormControl, MenuItem, TextField, InputLabel, Container } from '@material-ui/core'
 
+
 import 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
 
@@ -20,14 +21,15 @@ import {
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        // flexDirection: 'row',
-        position: 'relative',
-        top: 100,
+        display: 'flex',
         border: 'solid black 1px',
-        backgroundColor: 'rgba(120, 175, 245, 0.3)'
+        backgroundColor: 'rgba(120, 175, 245, 0.3)',
+        marginTop: 100,
+        justifyContent: 'center'
     },
     form: {
         flexGrow: 1,
+        justifySelf: 'center',
         display: 'flex',
         width: '80%', // Fix IE 11 issue.
         marginTop: theme.spacing(3),
@@ -45,6 +47,12 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'space-between',
         width: '500px'
     },
+    flexMobile: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: '2rem',
+        width: '85%'
+    },
     topRow: {
         marginBottom: '30px'
     },
@@ -55,8 +63,8 @@ const useStyles = makeStyles(theme => ({
     submitBtn: {
         color: theme.palette.primary.dark,
         backgroundColor: 'white',
-    }
-
+        marginBottom: '1rem',
+    },
 }))
 
 export const MaterialUIPickers = ({ selectedDate, handleDateChange, classes }) => {
@@ -92,6 +100,7 @@ export const MaterialUIPickers = ({ selectedDate, handleDateChange, classes }) =
 }
 
 export const ScheduleLesson = ({ history }) => {
+    console.log(window.visualViewport)
     const classes = useStyles()
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [lessonLength, setLessonLength] = useState(30)
@@ -141,7 +150,7 @@ export const ScheduleLesson = ({ history }) => {
 
     }
     return (
-        <Container component="main" maxWidth="md">
+        <Container component="main" maxWidth="md" className={classes.container}>
             <form className={classes.form} onSubmit={submitHandler}>
                 <Grid className={classes.root} container justify='center' spacing={1}>
                     <MaterialUIPickers
@@ -149,7 +158,7 @@ export const ScheduleLesson = ({ history }) => {
                         handleDateChange={handleDateChange}
                         classes={classes}
                     />
-                    <div className={classes.flex}>
+                    <div className={window.visualViewport.width > 400 ? classes.flex : classes.flexMobile}>
                         <FormControl>
                             <InputLabel
                                 id='lesson-length-select-label'>
