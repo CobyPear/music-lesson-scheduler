@@ -71,7 +71,7 @@ export function SimpleDialog(props) {
                     const putData = await response.json()
                     if (putData) {
                         dispatch(lessonsByUserId(userInfo._id))
-                        return putData, data
+                        return putData
                     } else {
                         return 'Mark as Paid unsuccessful'
                     }

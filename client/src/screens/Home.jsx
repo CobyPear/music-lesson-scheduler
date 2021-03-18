@@ -94,7 +94,7 @@ const Home = ({ history }) => {
         if (!sdkReady) {
             addPayPalScript()
         }
-    }, [dispatch, history, userInfo, lessons?.isPaid])
+    }, [dispatch, history, userInfo, lessons?.isPaid, sdkReady])
 
     function createData(date, time, length, location, price, paid, lessonId) {
         return { date, time, length, location, price, paid, lessonId }
