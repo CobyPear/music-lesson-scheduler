@@ -123,6 +123,8 @@ export const ScheduleLesson = ({ history }) => {
 
 
     const handleDateChange = (date) => {
+        // TODO: make sure date is going in correctly!
+        // current deployed version has date off by 1 day (puts in DB 1 day sooner than date actually picked)
         setSelectedDate(date);
     }
     const updatePrice = (lessonLength) => {
