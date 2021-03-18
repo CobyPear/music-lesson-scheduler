@@ -13,7 +13,9 @@ import 'react-calendar/dist/Calendar.css'
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        backgroundColor: theme.palette.background.paper
+        backgroundColor: theme.palette.background.paper,
+        position: 'relative',
+        top: 50
     },
     table: {
         minWidth: 650,
@@ -68,7 +70,7 @@ const Home = ({ history }) => {
     const { lessonLoading, lessonError, lesson } = getLessonById
     useEffect(() => {
         if (userInfo === null || userInfo === undefined) {
-            history.push('/login')
+            history?.push('/login')
         }
         const getLessons = () => {
             dispatch(lessonsByUserId(userInfo._id))
@@ -110,7 +112,7 @@ const Home = ({ history }) => {
     return (
         <div className={classes.root}>
             <div className='row'>
-                <h1>Welcome {userInfo && userInfo.name}</h1>
+                <h1>Welcome, {userInfo && userInfo.name}!</h1>
             </div>
             {flatLessons?.length > 0 ?
                 (

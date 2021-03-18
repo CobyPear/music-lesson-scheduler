@@ -4,8 +4,8 @@ import '../css/Welcome.css'
 const Welcome = () => {
     return (
         <>
-            <div className='row'>
-                <h1>Welcome</h1>
+            <div style={{ marginTop: '100px' }} className='row'>
+                <h1 >Welcome</h1>
             </div>
             <div className="row">
                 <a className='login' href="/login">Log In</a>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Dialog, DialogTitle, Button } from '@material-ui/core'
+import { Dialog, DialogTitle, Button, CircularProgress } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { lessonsByUserId } from '../actions/lessonActions'
 import ClearIcon from '@material-ui/icons/Clear'
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function SimpleDialog(props) {
     const classes = useStyles()
-    const dispatch = useDispatch() 
+    const dispatch = useDispatch()
     const { onClose, open, setOpen, amount, lessonId } = props
     const userLogin = useSelector(state => state.userLogin)
     const { loading, error, userInfo } = userLogin
@@ -48,12 +48,19 @@ export function SimpleDialog(props) {
             <DialogTitle align='center' variant='h1' id='payment-dialog-title'>
                 Pay with PayPal
             </DialogTitle>
+            {
+                loading && <CircularProgress />
+            }
+            {
+
+                error && <p>{error}</p>
+            }
             <PayPalButton
                 amount={amount}
                 shippingPreference='NO_SHIPPING'
-                onSuccess={async(details, data) => {
+                onSuccess={async (details, data) => {
                     alert('Transaction completed by ' + details.payer.name.given_name)
-                    
+
                     let token = sessionStorage.getItem('token') ? JSON.parse(sessionStorage.getItem('token')) : ''
                     const response = await fetch(`/api/lessons/paid/${lessonId}`, {
                         method: 'PUT',

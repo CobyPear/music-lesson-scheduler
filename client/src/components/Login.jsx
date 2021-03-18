@@ -3,12 +3,11 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../actions/userActions'
 
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -30,6 +29,9 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(12)
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -65,8 +67,8 @@ export default function Login({ history }) {
   const userLogin = useSelector(state => state.userLogin)
   const { loading, error, userInfo } = userLogin
 
-  const userDetails = useSelector(state => state.userLogin)
-  const { detailsLoading, detailsError, details } = userDetails
+  // const userDetails = useSelector(state => state.userLogin)
+  // const { detailsLoading, detailsError, details } = userDetails
 
 
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function Login({ history }) {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className={classes.container} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -118,13 +120,12 @@ export default function Login({ history }) {
           />
           {
             error && <div className="row">
-              <h2 className={classes.error}>{error?.message}, please check your email and password</h2>
+              <h2 className={classes.error}>{error?.message} please check your email and password</h2>
             </div>
           }
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
+          {
+            loading && <CircularProgress />
+          }
           <Button
             type="submit"
             fullWidth

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createLesson  as lessonCreate } from '../actions/lessonActions'
+import { createLesson as lessonCreate } from '../actions/lessonActions'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { Select, FormControl, MenuItem, TextField, InputLabel } from '@material-ui/core'
+import { Select, FormControl, MenuItem, TextField, InputLabel, Container } from '@material-ui/core'
+
 
 import 'date-fns'
 import DateFnsUtils from '@date-io/date-fns'
@@ -20,24 +20,57 @@ import {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        display: 'flex',
+        border: 'solid black 1px',
+        backgroundColor: 'rgba(120, 175, 245, 0.3)',
+        marginTop: 100,
+        justifyContent: 'center'
     },
-    formEl: {
-        margin: theme.spacing(2)
+    form: {
+        flexGrow: 1,
+        justifySelf: 'center',
+        display: 'flex',
+        width: '80%', // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
     },
     datePicker: {
         margin: theme.spacing(1)
     },
-    center: {
-        marginLeft: '50%'
-    }
-
+    price: {
+        borderColor: 'red',
+        color: theme.palette.success.dark,
+        textShadow: '0px 0px 2px white ',
+    },
+    flex: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        width: '500px'
+    },
+    flexMobile: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: '2rem',
+        width: '85%'
+    },
+    topRow: {
+        marginBottom: '30px'
+    },
+    buttonRow: {
+        display: 'flex',
+        justifyContent: 'center'
+    },
+    submitBtn: {
+        color: theme.palette.primary.dark,
+        backgroundColor: 'white',
+        marginBottom: '1rem',
+    },
 }))
 
 export const MaterialUIPickers = ({ selectedDate, handleDateChange, classes }) => {
     return (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Grid container justify="center">
+            <Grid container justify="center" className={classes.topRow}>
                 <KeyboardDatePicker
                     className={classes.datePicker}
                     margin="normal"
@@ -116,15 +149,15 @@ export const ScheduleLesson = ({ history }) => {
 
     }
     return (
-        <div className={classes.root}>
-            <form onSubmit={submitHandler}>
-                <Grid container justify='center' spacing={5}>
+        <Container component="main" maxWidth="md" className={classes.container}>
+            <form className={classes.form} onSubmit={submitHandler}>
+                <Grid className={classes.root} container justify='center' spacing={1}>
                     <MaterialUIPickers
                         selectedDate={selectedDate}
                         handleDateChange={handleDateChange}
                         classes={classes}
                     />
-                    <Grid item xs={1}>
+                    <div className={window.visualViewport.width > 400 ? classes.flex : classes.flexMobile}>
                         <FormControl>
                             <InputLabel
                                 id='lesson-length-select-label'>
@@ -144,19 +177,15 @@ export const ScheduleLesson = ({ history }) => {
                                 <MenuItem value={60}>60</MenuItem>
                             </Select>
                         </FormControl>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <p>{`$ ${lessonPrice}`}</p>
-                    </Grid>
-                    <Grid item xs={2}>
+                        <p className={classes.price}><strong>Price: </strong>{`$ ${lessonPrice}`}</p>
                         <TextField
                             label='Location'
                             value={lessonLocation}
                             onChange={(e) => setLessonLocation(e.target.value)}
                         />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button className={classes.center} type='submit'>Submit</Button>
+                    </div>
+                    <Grid item xs={12} className={classes.buttonRow}>
+                        <Button className={classes.submitBtn} type='submit'>Submit</Button>
                     </Grid>
                     <Grid>
                         {createLessonLoading && <CircularProgress />}
@@ -164,7 +193,7 @@ export const ScheduleLesson = ({ history }) => {
                     </Grid>
                 </Grid>
             </form>
-        </div>
+        </Container>
     )
 }
 

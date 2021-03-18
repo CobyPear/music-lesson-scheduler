@@ -33,6 +33,9 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(12)
+  },
   paper: {
     flexGrow: 1,
     marginTop: theme.spacing(8),
@@ -82,7 +85,7 @@ export default function SignUp({ history }) {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className={classes.container} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
