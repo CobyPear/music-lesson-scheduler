@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Header from './components/Header'
+import ResponsiveHeader from './components/ResponsiveHeader'
 import Welcome from './screens/Welcome'
 import Login from './components/Login'
 import SignUp from './components/Signup'
@@ -12,7 +12,7 @@ function App(props) {
   return (
     <>
     <Router>
-      <Header history={props.history} />
+      <Route component={ResponsiveHeader} />
       <Route path='/' exact component={Welcome} />
       <Route path='/login' component={Login} />
       <Route path='/signup' component={SignUp} />

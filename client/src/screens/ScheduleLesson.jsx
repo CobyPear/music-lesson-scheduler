@@ -100,7 +100,6 @@ export const MaterialUIPickers = ({ selectedDate, handleDateChange, classes }) =
 }
 
 export const ScheduleLesson = ({ history }) => {
-    console.log(window.visualViewport)
     const classes = useStyles()
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [lessonLength, setLessonLength] = useState(30)
