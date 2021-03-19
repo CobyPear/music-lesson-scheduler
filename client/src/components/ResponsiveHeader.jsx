@@ -83,7 +83,6 @@ const ResponsiveHeader = ({ history }) => {
 
     const [isMobile, setIsMobile] = useState(false)
     const [drawerOpen, setDrawerOpen] = useState(false)
-    console.log(drawerOpen)
 
     useEffect(() => {
         // from https://betterprogramming.pub/making-a-basic-header-responsive-with-materialui-and-react-2198fac923c8

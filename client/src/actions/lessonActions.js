@@ -41,7 +41,7 @@ export const lessonsByUserId = (id) => async(dispatch) => {
             price: x.price,
             paid: x.isPaid
         }))
-        console.log(flatLessons)
+        
         dispatch({
             type: FLAT_LESSON_ADD,
             payload: flatLessons
