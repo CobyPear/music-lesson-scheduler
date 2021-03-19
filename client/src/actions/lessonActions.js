@@ -34,13 +34,14 @@ export const lessonsByUserId = (id) => async(dispatch) => {
         let flatLessons = []
         data.forEach(x => flatLessons.push({
             lessonId: x._id,
-            date: new Date(x.date).toLocaleDateString(),
+            date: new Date(x.date).toLocaleDateString('en-US', {timeZone: 'UTC' }),
             time: x.time,
             length: x['length'],
             location: x.location,
             price: x.price,
             paid: x.isPaid
         }))
+        console.log(flatLessons)
         dispatch({
             type: FLAT_LESSON_ADD,
             payload: flatLessons

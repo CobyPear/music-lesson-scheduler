@@ -150,6 +150,7 @@ const Home = ({ history }) => {
                                     {rows.map((row, index) => (
                                         <TableRow key={index} style={new Date(row.date) > Date.now() ? { backgroundColor: 'rgba(129, 199, 132, 0.4)' } : new Date(row.date).toLocaleDateString() === new Date(Date.now()).toLocaleDateString() ? { backgroundColor: 'rgba(100, 181, 246, 0.4)' } : { backgroundColor: 'rgba(229, 115, 115, 0.4)' }}>
                                             <TableCell component='th' scope='row'>
+                                            {console.log(row.date)}
                                                 {row.date}
                                             </TableCell>
                                             <TableCell component='th' scope='row'>
